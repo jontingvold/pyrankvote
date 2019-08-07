@@ -17,7 +17,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[hard, soft])
         election.register_ballot(ranked_candidates=[hard, stay, soft])
 
-        winners = pyrankvote.voting_methods.instant_runoff_voting(election)
+        winners = pyrankvote.ranking_methods.instant_runoff_voting(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
 
         winner = winners[0]
@@ -37,7 +37,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[paal, per])
         election.register_ballot(ranked_candidates=[paal, per, askeladden])
 
-        winners = pyrankvote.voting_methods.instant_runoff_voting(election)
+        winners = pyrankvote.ranking_methods.instant_runoff_voting(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
         self.assertListEqual([per], winners, "Winners should be Per")
 
@@ -57,7 +57,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[hard, soft])
         election.register_ballot(ranked_candidates=[hard, stay, soft])
 
-        winners = pyrankvote.voting_methods.preferential_block_voting(election)
+        winners = pyrankvote.ranking_methods.preferential_block_voting(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
 
         winner = winners[0]
@@ -77,7 +77,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[paal, per])
         election.register_ballot(ranked_candidates=[paal, per, askeladden])
 
-        winners = pyrankvote.voting_methods.preferential_block_voting(election)
+        winners = pyrankvote.ranking_methods.preferential_block_voting(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
         self.assertListEqual([per], winners, "Winners should be Per")
 
@@ -95,7 +95,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[paal, per])
         election.register_ballot(ranked_candidates=[paal, per, askeladden])
 
-        winners = pyrankvote.voting_methods.preferential_block_voting(election)
+        winners = pyrankvote.ranking_methods.preferential_block_voting(election)
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([per, paal], winners, "Winners should be Per and Pål")
 
@@ -111,7 +111,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[hard, soft, stay])
         election.register_ballot(ranked_candidates=[soft, stay, hard])
 
-        winners = pyrankvote.voting_methods.preferential_block_voting(election)
+        winners = pyrankvote.ranking_methods.preferential_block_voting(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
 
         winner = winners[0]
@@ -129,7 +129,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
         election.register_ballot(ranked_candidates=[hard, soft, stay])
         election.register_ballot(ranked_candidates=[soft, stay, hard])
 
-        winners = pyrankvote.voting_methods.preferential_block_voting(election)
+        winners = pyrankvote.ranking_methods.preferential_block_voting(election)
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([soft, stay], winners, "Winners should be Soft and Stay")
 
@@ -149,7 +149,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         election.register_ballot(ranked_candidates=[hard, soft])
         election.register_ballot(ranked_candidates=[hard, stay, soft])
 
-        winners = pyrankvote.voting_methods.single_transferable_vote(election)
+        winners = pyrankvote.ranking_methods.single_transferable_vote(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
 
         winner = winners[0]
@@ -169,7 +169,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         election.register_ballot(ranked_candidates=[paal, per])
         election.register_ballot(ranked_candidates=[paal, per, askeladden])
 
-        winners = pyrankvote.voting_methods.single_transferable_vote(election)
+        winners = pyrankvote.ranking_methods.single_transferable_vote(election)
         self.assertEqual(1, len(winners), "Function should return a list with one item")
         self.assertListEqual([per], winners, "Winners should be Per")
 
@@ -187,7 +187,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         election.register_ballot(ranked_candidates=[paal, per])
         election.register_ballot(ranked_candidates=[paal, per, askeladden])
 
-        winners = pyrankvote.voting_methods.single_transferable_vote(election)
+        winners = pyrankvote.ranking_methods.single_transferable_vote(election)
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([per, paal], winners, "Winners should be Per and Pål")
 
@@ -220,7 +220,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         # 3. round: Ingrid: 3, Pål: 2.67
         #       --> Ingrid is elected
 
-        winners = pyrankvote.voting_methods.single_transferable_vote(election)
+        winners = pyrankvote.ranking_methods.single_transferable_vote(election)
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([per, ingrid], winners, "Winners should be Per and Ingrid")
 
@@ -254,6 +254,6 @@ class TestSingleTransferableVote(unittest.TestCase):
         # 3. round: Pål: 3.33, Ingrid: 3
         #       --> Pål is elected
 
-        winners = pyrankvote.voting_methods.single_transferable_vote(election)
+        winners = pyrankvote.ranking_methods.single_transferable_vote(election)
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([per, paal], winners, "Winners should be Per and Pål")

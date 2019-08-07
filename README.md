@@ -3,18 +3,18 @@
 PyRankVote - A Ranked Choice Voting System for Python
 =====================================================
 
-PyRankVote is a python library for different ranked-choice voting methods (sometimes called preferential voting methods) created by Jon Tingvold. 
+PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold. 
 
-The following voting methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
+The following ranking methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
 
 - Instant-runoff voting (IRV)
 
-The following voting methods are implemented for electing multiple people/alternatives (e.g. electing board members):
+The following ranking methods are implemented for electing multiple people/alternatives (e.g. electing board members):
 
 - Single transferable vote (STV)
 - Preferential block voting (PBV)
 
-You can read about the different ranking methods in [pyrankvote/voting_methods.py](pyrankvote/voting_methods.py).
+You can read about the different ranking methods in [pyrankvote/ranking_methods.py](pyrankvote/ranking_methods.py).
 
 ## Installation
 
@@ -41,7 +41,7 @@ election.register_ballot(ranked_candidates=[per, paal])
 election.register_ballot(ranked_candidates=[paal, per])
 election.register_ballot(ranked_candidates=[paal, per, askeladden])
 
-winners = pyrankvote.voting_methods.single_transferable_vote(election)
+winners = pyrankvote.ranking_methods.single_transferable_vote(election)
 
 print(winners)  # [Candidate(name='Per'), Candidate(name='Pål')]
 ```
