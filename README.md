@@ -18,13 +18,13 @@ The following ranking methods are implemented for electing multiple people/alter
 
 **Instant runoff voting (IRV)** is a singe candidate election method, that elected the candidate that get draw majority support (more than 50%).
 
-Voters rank candidates and are granted one vote. The candidate with fewest votes are removed and this voters votes are transfered according to the 2nd preference (or 3rd etc.).
+Voters rank candidates and are granted one vote. The candidate with fewest votes are removed and this candidates votes are transfered according to the 2nd preference (or 3rd etc.).
 
 **Preferential block voting (PBV)** is a multiple candidate election method, that electes candidates that
 can obtain majority support (more than 50%). Minority groups therefore lose their representation.
 
 Voters rank candidates and are granted as many votes as there are people that should be elected. The candidate with
-fewest votes are removed and this voters votes are transfered according to the 2nd preference (or 3rd etc.).
+fewest votes are removed and this candidates votes are transfered according to the 2nd preference (or 3rd etc.).
 
 **Single transferable vote (STV)** is a multiple candidate election method, that elects candidates based on proportional representation. Minority groups therefore get representation.
 
