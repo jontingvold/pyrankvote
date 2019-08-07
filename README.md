@@ -1,9 +1,10 @@
 
 
-PyRankVote - A Ranked Choice Voting System for Python
-=====================================================
+PyRankVote
+==========
+***—A Ranked Choice Voting System for Python***
 
-PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019. 
+PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
 
 The following ranking methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
 
@@ -16,30 +17,32 @@ The following ranking methods are implemented for electing multiple people/alter
 
 ## Different ranking methods
 
-**Instant runoff voting (IRV)** is a singe candidate election method, that elected the candidate that get draw majority support (more than 50%).
+**Instant runoff voting (IRV)** is a single candidate election method that elects the candidate that can obtain majority support (more than 50%).
 
-Voters rank candidates and are granted one vote. The candidate with fewest votes are removed and this candidates votes are transfered according to the 2nd preference (or 3rd etc.).
+Voters rank candidates and are granted one vote. The candidate with fewest votes is removed and this candidate's votes are transferred according to the 2nd preference (or 3rd etc.).
 
-**Preferential block voting (PBV)** is a multiple candidate election method, that electes candidates that
-can obtain majority support (more than 50%). Minority groups therefore lose their representation.
+**Preferential block voting (PBV)** is a multiple candidate election method that elects candidates that
+can obtain majority support (more than 50%). PBV tend to elect uncontroversial candidates that agree with each other. Minority group often lose their representation.
 
 Voters rank candidates and are granted as many votes as there are people that should be elected. The candidate with
-fewest votes are removed and this candidates votes are transfered according to the 2nd preference (or 3rd etc.).
+fewest votes are removed and this candidate's votes are transferred according to the 2nd preference (or 3rd etc.).
 
-**Single transferable vote (STV)** is a multiple candidate election method, that elects candidates based on proportional representation. Minority groups therefore get representation.
+**Single transferable vote (STV)** is a multiple candidate election method that elects candidates based on proportional representation. Minority groups get representation. STV is therefore the preferred ranked-choice voting method for parliament elections. 
 
 Voters rank candidates and are granted as one vote each. If a candidate gets more votes than the threshold for being
 elected, the candidate is proclaimed as winner. This function uses the Droop quota, where
 
-    droop_quota = votes/(seats+1) + 1
+```python
+droop_quota = votes/(seats+1) + 1
+```
 
-If one candidate get more votes than the threshold the excess votes are transfered to voters that voted for this
-candidate's 2nd (or 3rd, 4th etc) alternative. If no candidate get over the threshold, the candidate with fewest votes
-are removed. Votes for this candidate is then transfered to voters 2nd (or 3rd, 4th etc) alternative.
+If one candidate gets more votes than the threshold the excess votes are transferred to voters that voted for this
+candidate's 2nd (or 3rd, 4th, etc) alternative. If no candidate gets over the threshold, the candidate with fewest votes
+is removed. Votes for this candidate is then transferred to voters 2nd (or 3rd, 4th, etc) alternative.
 
-Preferential block voting and Single transferable vote is the same as Instant-runoff voting when only one candidate is elected.
+Preferential block voting and Single transferable vote are the same as Instant-runoff voting when only one candidate is elected.
 
-Instant-runoff voting and Preferential block voting is basicly the same as **exaustive ballout**, the prefered method in Robers rules of order. The only difference is that in exaustive ballout voters can adjust their preferences between each round (elimination or election of one candidate).
+Instant-runoff voting and Preferential block voting are basically the same as **exhaustive ballot**, the preferred method in Robers rules of order. The only difference is that in exhaustive ballot voters can adjust their preferences between each round (elimination or election of one candidate).
 
 For more info see [pyrankvote/ranking_methods.py](pyrankvote/ranking_methods.py) and Wikipedia.
 
@@ -110,4 +113,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](LICENSE)
