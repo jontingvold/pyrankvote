@@ -3,7 +3,7 @@
 PyRankVote - A Ranked Choice Voting System for Python
 =====================================================
 
-PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold. 
+PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019. 
 
 The following ranking methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
 
@@ -55,22 +55,53 @@ pip install git+https://github.com/jontingvold/pyrankvote.git
 
 ```python
 import pyrankvote
+from pyrankvote.models import Candidate, Ballot
 
-election = pyrankvote.Election(number_of_seats=2)
-election.add_candidate("Per")
-election.add_candidate("Pål")
-election.add_candidate("Askeladden")
+per = Candidate("Per")
+paal = Candidate("Pål")
+askeladden = Candidate("Askeladden")
 
-per, paal, askeladden = election.get_candidates()
-election.register_ballot(ranked_candidates=[askeladden, per])
-election.register_ballot(ranked_candidates=[per, paal])
-election.register_ballot(ranked_candidates=[per, paal])
-election.register_ballot(ranked_candidates=[paal, per])
-election.register_ballot(ranked_candidates=[paal, per, askeladden])
+candidates = [per, paal, askeladden]
 
-winners = pyrankvote.ranking_methods.single_transferable_vote(election)
+ballots = [
+    Ballot(ranked_candidates=[askeladden, per]),
+    Ballot(ranked_candidates=[per, paal]),
+    Ballot(ranked_candidates=[per, paal]),
+    Ballot(ranked_candidates=[paal, per]),
+    Ballot(ranked_candidates=[paal, per, askeladden])
+]
 
-print(winners)  # [Candidate(name='Per'), Candidate(name='Pål')]
+election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(candidates, ballots, number_of_seats=2)
+
+winners = election_result.get_winners()
+
+print(election_result)
+
+"""
+ROUND 1
+Candidate      Votes  Status
+-----------  -------  --------
+Per                2  Hopeful
+Pål                2  Hopeful
+Askeladden         1  Hopeful
+
+
+ROUND 2
+Candidate      Votes  Status
+-----------  -------  --------
+Per                3  Hopeful
+Pål                2  Hopeful
+Askeladden         0  Rejected
+
+
+FINAL RESULT
+Candidate      Votes  Status
+-----------  -------  --------
+Per                3  Elected
+Pål                2  Elected
+Askeladden         0  Rejected
+"""
+
 ```
 
 ## Contributing

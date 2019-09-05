@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='PyRankVote',
-    version='0.1.1',
+    version='0.1.2',
     author='Jon Tingvold',
     # author_email='jon.ti...@gmail.com',
     description='PyRankVote is a python library for different ranked voting methods, '

@@ -1,7 +1,6 @@
-from pyrankvote.models import Election
-from pyrankvote import ranking_methods
+from pyrankvote import single_seat_ranking_methods, multiple_seat_ranking_methods
 
 __all__ = [
-    'Election',
-    'ranking_methods',
+    'single_seat_ranking_methods',
+    'multiple_seat_ranking_methods',
 ]
