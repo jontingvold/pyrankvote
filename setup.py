@@ -4,10 +4,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='PyRankVote',
-    version='0.1.2',
+    name='pyrankvote',
+    version='0.1.4',
     author='Jon Tingvold',
-    # author_email='jon.ti...@gmail.com',
+    author_email='jon.tingvold@gmail.com',
     description='PyRankVote is a python library for different ranked voting methods, '
                 'like instant-runoff voting, single transferable vote and preferential block voting, '
                 'created by Jon Tingvold.',

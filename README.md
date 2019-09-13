@@ -1,9 +1,7 @@
 
 
-PyRankVote
+PyRankVote —A Ranked Choice Voting System for Python
 ==========
-***—A Ranked Choice Voting System for Python***
-
 PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
 
 The following ranking methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
@@ -51,7 +49,7 @@ For more info see [pyrankvote/ranking_methods.py](pyrankvote/ranking_methods.py)
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install (or upgrade) pyrankvote.
 
 ```bash
-pip install git+https://github.com/jontingvold/pyrankvote.git
+pip install pyrankvote
 ```
 
 ## Usage
