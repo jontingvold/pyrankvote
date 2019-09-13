@@ -42,7 +42,7 @@ Preferential block voting and Single transferable vote are the same as Instant-r
 
 Instant-runoff voting and Preferential block voting are basically the same as **exhaustive ballot**, the preferred method in Robers rules of order. The only difference is that in exhaustive ballot voters can adjust their preferences between each round (elimination or election of one candidate).
 
-For more info see [pyrankvote/ranking_methods.py](https://github.com/jontingvold/pyrankvote/pyrankvote/ranking_methods.py) and Wikipedia.
+For more info see [pyrankvote/single_seat_ranking_methods.py](pyrankvote/single_seat_ranking_methods.py), [pyrankvote/multiple_seat_ranking_methods.py](pyrankvote/multiple_seat_ranking_methods.py) and Wikipedia.
 
 ## Installation
 
@@ -111,4 +111,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-[MIT](https://github.com/jontingvold/pyrankvote/LICENSE)
+[MIT](LICENSE.txt)
