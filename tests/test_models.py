@@ -48,6 +48,25 @@ class TestBallot(unittest.TestCase):
         # This should NOT raise an error
         models.Ballot(ranked_candidates=[candidate1, candidate2, candidate3])
 
+    def test_new_candidate_objects(self):
+        """Test that if one of the candidate that are voted for are not a cadidate, that a TypeError is raised"""
+
+        class NewCandidate:
+            def __init__(self, name):
+                self.name = "New "+name
+            def __str__(self):
+                return self.name
+            def __hash__(self):
+                return hash(self.name)
+            def __eq__(self, other):
+                return self.name == other.name
+
+        candidate1 = NewCandidate("Per")
+        candidate2 = NewCandidate("Aase")
+
+        # This should NOT raise an error
+        models.Ballot(ranked_candidates=[candidate1, candidate2])
+
     def test_raise_error_if_not_all_obj_are_candidate_objects(self):
         """Test that if one of the candidate that are voted for are not a cadidate, that a TypeError is raised"""
 

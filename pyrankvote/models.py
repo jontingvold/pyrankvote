@@ -33,7 +33,7 @@ class Ballot:
             raise DuplicateCandidatesError
 
         if not Ballot._is_all_candidate_objects(ranked_candidates):
-            raise TypeError("Not all objects in ranked candidate list are of class Candidate")
+            raise TypeError("Not all objects in ranked candidate list are of class Candidate or implement the same properties and methods")
 
         self.ranked_candidates = ranked_candidates
 
@@ -45,10 +45,24 @@ class Ballot:
         return len(set(ranked_candidates)) is not len(ranked_candidates)
 
     @staticmethod
-    def _is_all_candidate_objects(ranked_candidates):
-        for obj in ranked_candidates:
-            if obj.__class__ is not Candidate:
+    def _is_all_candidate_objects(objects):
+        for obj in objects:
+            if not Ballot._is_candidate_object(obj):
                 return False
 
         # If all objects are Candidate-objects
         return True
+
+    @staticmethod
+    def _is_candidate_object(obj):
+        if obj.__class__ is Candidate:
+            return True
+
+        is_candidate_like = all([
+            hasattr(obj, 'name'),
+            hasattr(obj, '__str__'),
+            hasattr(obj, '__hash__'),
+            hasattr(obj, '__eq__')
+        ])
+
+        return is_candidate_like
