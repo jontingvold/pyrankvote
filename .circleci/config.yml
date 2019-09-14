@@ -1,0 +1,18 @@
+version: 3
+jobs:
+  build:
+    docker:
+        - image: circleci/python:3.6.4  # primary container for the build job
+    steps:
+        - checkout # check out the code in the project directory
+        - run:
+            command: |
+                sudo python setup.py install
+                sudo pip install nose coverage
+                sudo pip install python-coveralls
+        - run:
+            command: |
+                sudo coverage run setup.py test
+        - run:
+            command: |
+                coveralls
