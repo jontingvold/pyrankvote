@@ -37,9 +37,6 @@ class Ballot:
 
         self.ranked_candidates = ranked_candidates
 
-    def get_ranked_candidates(self):
-        return self.ranked_candidates
-
     @staticmethod
     def _is_duplicates(ranked_candidates):
         return len(set(ranked_candidates)) is not len(ranked_candidates)
@@ -60,7 +57,6 @@ class Ballot:
 
         is_candidate_like = all([
             hasattr(obj, 'name'),
-            hasattr(obj, '__str__'),
             hasattr(obj, '__hash__'),
             hasattr(obj, '__eq__')
         ])

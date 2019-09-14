@@ -54,34 +54,30 @@ class TestBallot(unittest.TestCase):
         class NewCandidate:
             def __init__(self, name):
                 self.name = "New "+name
-            def __str__(self):
-                return self.name
             def __hash__(self):
                 return hash(self.name)
-            def __eq__(self, other):
-                return self.name == other.name
 
         candidate1 = NewCandidate("Per")
         candidate2 = NewCandidate("Aase")
 
         # This should NOT raise an error
-        models.Ballot(ranked_candidates=[candidate1, candidate2])
+        pyrankvote.Ballot(ranked_candidates=[candidate1, candidate2])
 
     def test_raise_error_if_not_all_obj_are_candidate_objects(self):
         """Test that if one of the candidate that are voted for are not a cadidate, that a TypeError is raised"""
 
-        candidate1 = models.Candidate("Per")
+        candidate1 = pyrankvote.Candidate("Per")
         candidate2 = "Aase"
 
         def tester(_):
-            models.Ballot(ranked_candidates=[candidate1, candidate2])
+            pyrankvote.Ballot(ranked_candidates=[candidate1, candidate2])
 
         msg = "Candidate 2 is a string, not a Candidate, and should raise a TypeError"
         self.assertRaises(TypeError, tester, msg)
 
         # TEST THE OPPOSITE
-        candidate1 = models.Candidate("Per")
-        candidate2 = models.Candidate("Aase")
+        candidate1 = pyrankvote.Candidate("Per")
+        candidate2 = pyrankvote.Candidate("Aase")
 
         # This should NOT raise an error
-        models.Ballot(ranked_candidates=[candidate1, candidate2])
+        pyrankvote.Ballot(ranked_candidates=[candidate1, candidate2])
