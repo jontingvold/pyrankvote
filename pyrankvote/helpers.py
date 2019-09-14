@@ -10,6 +10,11 @@ from typing import List, NamedTuple
 from tabulate import tabulate
 
 
+def almost_equal(value1, value2):
+    CONSIDERED_EQUAL_MARGIN = 0.001
+    return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
+
+
 class CandidateStatus:
     Elected = "Elected"
     Hopeful = "Hopeful"
@@ -203,36 +208,41 @@ class ElectionManager:
 
     def _sort_candidates_in_race(self):
         sorted_candidates_in_race = sorted(self._candidates_in_race,
-                                           key=functools.cmp_to_key(self._candidate1_has_more_votes))
+                                           key=functools.cmp_to_key(self._cmp_candidate_vote_counts))
         self._candidates_in_race = sorted_candidates_in_race
 
-    def _candidate1_has_more_votes(self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount) -> bool:
-        c1_votes = round(candidate1_vc.number_of_votes, 4)
-        c2_votes = round(candidate2_vc.number_of_votes, 4)
+    def _cmp_candidate_vote_counts(self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount) -> int:
+        c1_votes: float = candidate1_vc.number_of_votes
+        c2_votes: float = candidate2_vc.number_of_votes
 
-        if c1_votes != c2_votes:
-            return c1_votes > c2_votes
+        if not almost_equal(c1_votes, c2_votes):
+            if c1_votes > c2_votes:
+                return -1
+            else:
+                return 1
+
+        # If equal number of votes
         else:
-            # If equal number of votes:
-            return self._compare_if_equal_number_of_votes(candidate1_vc, candidate2_vc)
+            if self._compare_method_if_equal == CompareMethodIfEqual.MostSecondChoiceVotes:
+                # Choose candidate with most second choices (or third, forth and so on) (default)
+                if self._candidate1_has_most_second_choices(candidate1_vc, candidate2_vc, x=1):
+                    return -1
+                else:
+                    return 1
 
-    def _compare_if_equal_number_of_votes(self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount) -> bool:
-        if self._compare_method_if_equal == CompareMethodIfEqual.Random:
-            return self._compare_random()
-        elif self._compare_method_if_equal == CompareMethodIfEqual.MostSecondChoiceVotes:
-            return self._candidate1_has_most_second_choices(candidate1_vc, candidate2_vc, x=1)
-        else:
-            raise SystemError("Compare method unknown/not implemented.")
+            if self._compare_method_if_equal == CompareMethodIfEqual.Random:
+                # Choose randomly
+                return random.choice([1, -1])
 
-    def _compare_random(self) -> bool:
-        return random.choice([True, False])
+            else:
+                raise SystemError("Compare method unknown/not implemented.")
 
     def _candidate1_has_most_second_choices(self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount, x) -> bool:
         if x >= self._number_of_candidates:
-            return self._compare_random()
+            return random.choice([True, False])
 
-        votes_candidate1 = 0
-        votes_candidate2 = 0
+        votes_candidate1: int = 0
+        votes_candidate2: int = 0
 
         for ballot in self._ballots:
             candidate = self._get_ballot_candidate_nr_x_in_race_or_none(ballot, x)
@@ -244,11 +254,10 @@ class ElectionManager:
             if candidate is None:
                 pass  # Zero votes
 
-        if votes_candidate1 != votes_candidate2:
-            return votes_candidate1 > votes_candidate2
+        if votes_candidate1 == votes_candidate2:
+            return self._candidate1_has_most_second_choices(candidate1_vc, candidate2_vc, x + 1)
         else:
-            # If still same number of votes, look at 3rd choice votes (or 4th choice votes etc.)
-            return self._candidate1_has_most_second_choices(candidate1_vc, candidate2_vc, x+1)
+            return votes_candidate1 > votes_candidate2
 
 
 class ElectionResults:
