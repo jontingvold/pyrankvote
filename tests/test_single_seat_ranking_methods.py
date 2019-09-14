@@ -1,6 +1,6 @@
 import unittest
 import pyrankvote
-from pyrankvote.models import Candidate, Ballot
+from pyrankvote import Candidate, Ballot
 
 
 class TestInstantRunoffVoting(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden])
         ]
 
-        election_result = pyrankvote.single_seat_ranking_methods.instant_runoff_voting(
+        election_result = pyrankvote.instant_runoff_voting(
             candidates, ballots
         )
         winners = election_result.get_winners()
@@ -39,7 +39,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
             Ballot(ranked_candidates=[hard, stay, soft]),
         ]
 
-        election_result = pyrankvote.single_seat_ranking_methods.instant_runoff_voting(
+        election_result = pyrankvote.instant_runoff_voting(
             candidates, ballots
         )
         winners = election_result.get_winners()
@@ -65,7 +65,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.single_seat_ranking_methods.instant_runoff_voting(
+        election_result = pyrankvote.instant_runoff_voting(
             candidates, ballots
         )
         winners = election_result.get_winners()

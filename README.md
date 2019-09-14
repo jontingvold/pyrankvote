@@ -58,23 +58,28 @@ pip install pyrankvote
 
 ```python
 import pyrankvote
-from pyrankvote.models import Candidate, Ballot
+from pyrankvote import Candidate, Ballot
 
-per = Candidate("Per")
-paal = Candidate("Pål")
-askeladden = Candidate("Askeladden")
+trump = Candidate("Donald Trump")
+hillary = Candidate("Hillary Clinton")
+johnson = Candidate("Gary Johnson")
 
-candidates = [per, paal, askeladden]
+candidates = [trump, hillary, johnson]
 
 ballots = [
-    Ballot(ranked_candidates=[askeladden, per]),
-    Ballot(ranked_candidates=[per, paal]),
-    Ballot(ranked_candidates=[per, paal]),
-    Ballot(ranked_candidates=[paal, per]),
-    Ballot(ranked_candidates=[paal, per, askeladden])
+    Ballot(ranked_candidates=[trump, johnson, hillary]),
+    Ballot(ranked_candidates=[trump, johnson, hillary]),
+    Ballot(ranked_candidates=[trump, johnson]),
+    Ballot(ranked_candidates=[trump, johnson]),
+    Ballot(ranked_candidates=[johnson, hillary, trump]),
+    Ballot(ranked_candidates=[johnson, hillary]),
+    Ballot(ranked_candidates=[hillary, johnson, trump]),
+    Ballot(ranked_candidates=[hillary, johnson]),
+    Ballot(ranked_candidates=[hillary, johnson])
 ]
 
-election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(candidates, ballots, number_of_seats=2)
+# You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
+election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
 
 winners = election_result.get_winners()
 
@@ -82,29 +87,26 @@ print(election_result)
 
 """
 ROUND 1
-Candidate      Votes  Status
------------  -------  --------
-Per                2  Hopeful
-Pål                2  Hopeful
-Askeladden         1  Hopeful
-
+Candidate          Votes  Status
+---------------  -------  --------
+Donald Trump           4  Hopeful
+Hillary Clinton        3  Hopeful
+Gary Johnson           2  Hopeful
 
 ROUND 2
-Candidate      Votes  Status
------------  -------  --------
-Per                3  Hopeful
-Pål                2  Hopeful
-Askeladden         0  Rejected
-
+Candidate          Votes  Status
+---------------  -------  --------
+Hillary Clinton        5  Hopeful
+Donald Trump           4  Hopeful
+Gary Johnson           0  Rejected
 
 FINAL RESULT
-Candidate      Votes  Status
------------  -------  --------
-Per                3  Elected
-Pål                2  Elected
-Askeladden         0  Rejected
+Candidate          Votes  Status
+---------------  -------  --------
+Hillary Clinton        9  Elected
+Donald Trump           0  Rejected
+Gary Johnson           0  Rejected
 """
-
 ```
 
 ## Contributing

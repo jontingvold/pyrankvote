@@ -1,12 +1,12 @@
 import unittest
 import pyrankvote
-from pyrankvote.models import Candidate, Ballot
+from pyrankvote import Candidate, Ballot
+
 
 
 class TestPreferentialBlockVoting(unittest.TestCase):
     def test_simple_irv(self):
 
-        
         stay = Candidate("Stay")
         soft = Candidate("Soft Brexit")
         hard = Candidate("Hard Brexit")
@@ -21,7 +21,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[hard, stay, soft]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.preferential_block_voting(
+        election_result = pyrankvote.preferential_block_voting(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -47,7 +47,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.preferential_block_voting(
+        election_result = pyrankvote.preferential_block_voting(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -71,7 +71,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.preferential_block_voting(
+        election_result = pyrankvote.preferential_block_voting(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -93,7 +93,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[soft, stay, hard]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.preferential_block_voting(
+        election_result = pyrankvote.preferential_block_voting(
             candidates, ballots, number_of_seats=1
         )
 
@@ -117,7 +117,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[soft, stay, hard]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.preferential_block_voting(
+        election_result = pyrankvote.preferential_block_voting(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -143,7 +143,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[hard, stay, soft]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(
+        election_result = pyrankvote.single_transferable_vote(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -169,7 +169,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(
+        election_result = pyrankvote.single_transferable_vote(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -193,7 +193,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(
+        election_result = pyrankvote.single_transferable_vote(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -232,7 +232,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         # 3. round: Ingrid: 3, Pål: 2.67
         #       --> Ingrid is elected
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(
+        election_result = pyrankvote.single_transferable_vote(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -271,11 +271,62 @@ class TestSingleTransferableVote(unittest.TestCase):
         # 3. round: Pål: 3.33, Ingrid: 3
         #       --> Pål is elected
 
-        election_result = pyrankvote.multiple_seat_ranking_methods.single_transferable_vote(
+        election_result = pyrankvote.single_transferable_vote(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
 
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([per, paal], winners, "Winners should be Per and Pål")
-        
+
+    def test_example(self):
+        popular_moderate = Candidate("William, popular moderate")
+        moderate2 = Candidate("John, moderate")
+        moderate3 = Candidate("Charles, moderate")
+        far_left = Candidate("Thomas, far-left")
+
+        candidates = [popular_moderate, moderate2, moderate3, far_left]
+
+        ballots = [
+            Ballot(ranked_candidates=[popular_moderate, moderate2, moderate3, far_left]),
+            Ballot(ranked_candidates=[popular_moderate, moderate2, moderate3, far_left]),
+            Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
+            Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
+            Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
+            Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
+
+            Ballot(ranked_candidates=[far_left, popular_moderate, moderate2, moderate3]),
+            Ballot(ranked_candidates=[far_left, popular_moderate, moderate2, moderate3]),
+            Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
+            Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
+        ]
+
+        election_result = pyrankvote.single_transferable_vote(candidates, ballots, number_of_seats=2)
+
+        round_nr = 0
+        candidates_results_in_round = election_result.rounds[round_nr]
+        ranking_in_round = [candidate_result.candidate for candidate_result in candidates_results_in_round]
+        votes_in_round = [candidate_result.number_of_votes for candidate_result in candidates_results_in_round]
+        self.assertEqual(4, len(ranking_in_round), "Function should return a list with one item")
+        self.assertListEqual([popular_moderate, far_left, moderate2, moderate3], ranking_in_round)
+        assertListAlmostEqual(self, [4 , 4, 2, 0], votes_in_round)
+
+        round_nr = 1
+        candidates_results_in_round = election_result.rounds[round_nr]
+        ranking_in_round = [candidate_result.candidate for candidate_result in candidates_results_in_round]
+        votes_in_round = [candidate_result.number_of_votes for candidate_result in candidates_results_in_round]
+        self.assertEqual(4, len(ranking_in_round), "Function should return a list with one item")
+        self.assertListEqual([popular_moderate, far_left, moderate2, moderate3], ranking_in_round)
+        assertListAlmostEqual(self, [4 , 4, 2, 0], votes_in_round)
+
+        round_nr = 2
+        candidates_results_in_round = election_result.rounds[round_nr]
+        ranking_in_round = [candidate_result.candidate for candidate_result in candidates_results_in_round]
+        votes_in_round = [candidate_result.number_of_votes for candidate_result in candidates_results_in_round]
+        self.assertEqual(4, len(ranking_in_round), "Function should return a list with one item")
+        self.assertListEqual([popular_moderate, far_left, moderate2, moderate3], ranking_in_round)
+        assertListAlmostEqual(self, [6 , 4, 0, 0], votes_in_round)
+
+        winners = election_result.get_winners()
+        self.assertEqual(2, len(winners), "Function should return a list with two items")
+        self.assertListEqual([popular_moderate, moderate2], winners, "Winners should be William and John")
