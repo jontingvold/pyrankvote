@@ -3,6 +3,18 @@ import pyrankvote
 from pyrankvote import Candidate, Ballot
 
 
+def almost_equal(value1, value2):
+    CONSIDERED_EQUAL_MARGIN = 0.001
+    return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
+
+
+def assertListAlmostEqual(testClass, correct_list, li):
+    testClass.assertEqual(len(correct_list), len(li), "List should be of same length")
+
+    almost_equal_entries = [almost_equal(correct_list[i], li[i]) for i in range(len(correct_list))]
+    msg = "%s should have been almost equal to %s" % (li, correct_list)
+    testClass.assertTrue(all(almost_equal_entries), msg)
+
 
 class TestPreferentialBlockVoting(unittest.TestCase):
     def test_simple_irv(self):
@@ -124,6 +136,58 @@ class TestPreferentialBlockVoting(unittest.TestCase):
 
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([soft, stay], winners, "Winners should be Soft and Stay")
+
+    def test_example(self):
+        popular_moderate = Candidate("William, popular moderate")
+        moderate2 = Candidate("John, moderate")
+        moderate3 = Candidate("Charles, moderate")
+        far_left = Candidate("Thomas, far-left")
+
+        candidates = [popular_moderate, moderate2, moderate3, far_left]
+
+        ballots = [
+            Ballot(ranked_candidates=[popular_moderate, moderate2, moderate3, far_left]),
+            Ballot(ranked_candidates=[popular_moderate, moderate2, moderate3, far_left]),
+            Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
+            Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
+            Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
+            Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
+
+            Ballot(ranked_candidates=[far_left, popular_moderate, moderate2, moderate3]),
+            Ballot(ranked_candidates=[far_left, popular_moderate, moderate2, moderate3]),
+            Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
+            Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
+        ]
+
+        election_result = pyrankvote.preferential_block_voting(candidates, ballots, number_of_seats=2)
+
+        round_nr = 0
+        candidates_results_in_round = election_result.rounds[round_nr]
+        ranking_in_round = [candidate_result.candidate for candidate_result in candidates_results_in_round]
+        votes_in_round = [candidate_result.number_of_votes for candidate_result in candidates_results_in_round]
+        self.assertEqual(4, len(ranking_in_round), "Function should return a list with one item")
+        self.assertListEqual([popular_moderate, moderate2, far_left, moderate3], ranking_in_round)
+        assertListAlmostEqual(self, [8 , 6, 4, 2], votes_in_round)
+
+        round_nr = 1
+        candidates_results_in_round = election_result.rounds[round_nr]
+        ranking_in_round = [candidate_result.candidate for candidate_result in candidates_results_in_round]
+        votes_in_round = [candidate_result.number_of_votes for candidate_result in candidates_results_in_round]
+        self.assertEqual(4, len(ranking_in_round), "Function should return a list with one item")
+        self.assertListEqual([popular_moderate, moderate2, far_left, moderate3], ranking_in_round)
+        assertListAlmostEqual(self, [8 , 8, 4, 0], votes_in_round)
+
+        round_nr = 2
+        candidates_results_in_round = election_result.rounds[round_nr]
+        ranking_in_round = [candidate_result.candidate for candidate_result in candidates_results_in_round]
+        votes_in_round = [candidate_result.number_of_votes for candidate_result in candidates_results_in_round]
+        self.assertEqual(4, len(ranking_in_round), "Function should return a list with one item")
+        self.assertListEqual([popular_moderate, moderate2, far_left, moderate3], ranking_in_round)
+        assertListAlmostEqual(self, [10, 10, 0, 0], votes_in_round)
+
+        winners = election_result.get_winners()
+        self.assertEqual(2, len(winners), "Function should return a list with two items")
+        self.assertListEqual([popular_moderate, moderate2], winners, "Winners should be William and John")
 
 
 class TestSingleTransferableVote(unittest.TestCase):

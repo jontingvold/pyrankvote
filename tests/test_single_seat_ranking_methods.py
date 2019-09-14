@@ -72,3 +72,48 @@ class TestInstantRunoffVoting(unittest.TestCase):
 
         self.assertEqual(1, len(winners), "Function should return a list with one item")
         self.assertListEqual([per], winners, "Winners should be Per")
+
+    def test_case3(self):
+        trump = Candidate("Donald Trump")
+        hillary = Candidate("Hillary Clinton")
+        mary = Candidate("Uniting Mary")
+
+        candidates = [trump, hillary, mary]
+
+        ballots = [
+            Ballot(ranked_candidates=[trump, mary, hillary]),
+            Ballot(ranked_candidates=[trump, mary, hillary]),
+            Ballot(ranked_candidates=[hillary, mary, trump]),
+            Ballot(ranked_candidates=[hillary, mary, trump]),
+            Ballot(ranked_candidates=[hillary, mary])
+        ]
+
+        # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
+        election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+
+        winners = election_result.get_winners()
+
+        self.assertEqual(1, len(winners), "Function should return a list with one item")
+        self.assertListEqual([hillary], winners, "Winners should be Per")
+
+    def test_equal_number_of_votes(self):
+        trump = Candidate("Donald Trump")
+        hillary = Candidate("Hillary Clinton")
+        mary = Candidate("Uniting Mary")
+
+        candidates = [trump, hillary, mary]
+
+        ballots = [
+            Ballot(ranked_candidates=[trump, mary, hillary]),
+            Ballot(ranked_candidates=[trump, mary, hillary]),
+            Ballot(ranked_candidates=[mary, trump, hillary]),
+            Ballot(ranked_candidates=[hillary, trump, mary]),
+            Ballot(ranked_candidates=[hillary, mary, trump])
+        ]
+
+        # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
+        election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+        ranking_first_round = election_result.rounds[0]
+
+        self.assertEqual(3, len(ranking_first_round), "Function should return a list with one item")
+        self.assertListEqual([trump, hillary, mary], [candidate_result.candidate for candidate_result in ranking_first_round], "Winners should be Per")
