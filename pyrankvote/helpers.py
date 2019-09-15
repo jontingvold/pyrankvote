@@ -66,7 +66,7 @@ class ElectionManager:
             candidate: CandidateVoteCount(candidate) for candidate in candidates
         }
 
-        self._candidates_in_race: List[CandidateVoteCount] = self._candidate_vote_counts.values()
+        self._candidates_in_race: List[CandidateVoteCount] = list(self._candidate_vote_counts.values())
         self._elected_candidates: List[CandidateVoteCount] = []  # Sorted asc by election round
         self._rejected_candidates: List[CandidateVoteCount] = []  # Sorted desc by election round
 
@@ -189,7 +189,7 @@ class ElectionManager:
         ]
         return candidates
 
-    def get_results(self) -> List[CandidateStatus]:
+    def get_results(self) -> List[CandidateResult]:
         candidates_vc: List[CandidateVoteCount] = []
         candidates_vc.extend(self._elected_candidates)
         candidates_vc.extend(self._candidates_in_race)
