@@ -255,9 +255,9 @@ class ElectionManager:
 
             if candidate == candidate1_vc.candidate:
                 votes_candidate1 += 1
-            if candidate == candidate2_vc.candidate:
+            elif candidate == candidate2_vc.candidate:
                 votes_candidate2 += 1
-            if candidate is None:
+            elif candidate is None:
                 pass  # Zero votes
 
         if votes_candidate1 == votes_candidate2:
