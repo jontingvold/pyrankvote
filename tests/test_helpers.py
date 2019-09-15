@@ -1,7 +1,7 @@
 import unittest
-import numpy as np
 from pyrankvote import Candidate, Ballot
 from pyrankvote import helpers
+from pyrankvote.test_helpers import assert_list_almost_equal
 
 
 class TestCandidateVoteCount(unittest.TestCase):
@@ -56,7 +56,7 @@ class TestElectionManager(unittest.TestCase):
 
         candidate_votes = [candidate_result.number_of_votes for candidate_result in candidate_results]
         correct_candidate_votes = [1.0, 1.0, 1.0]
-        np.testing.assert_almost_equal(candidate_votes, correct_candidate_votes, 0.001, "Votes not counted correctly.")
+        assert_list_almost_equal(self, candidate_votes, correct_candidate_votes, 0.001, "Votes not counted correctly.")
 
         candidate_status = [candidate_result.status for candidate_result in candidate_results]
         hopeful = helpers.CandidateStatus.Hopeful

@@ -7,9 +7,8 @@ jobs:
         - checkout # check out the code in the project directory
         - run:
             command: |
-                sudo pip install numpy
                 sudo python setup.py install
-                sudo pip install nose coverage
+                sudo pip install coverage
                 sudo pip install python-coveralls
         - run:
             command: |

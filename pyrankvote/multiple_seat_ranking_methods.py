@@ -6,7 +6,6 @@ Implemented methods:
  - Preferential block voting
 """
 
-import math
 from typing import List
 from pyrankvote.helpers import CompareMethodIfEqual, ElectionManager, ElectionResults
 from pyrankvote.models import Candidate, Ballot
