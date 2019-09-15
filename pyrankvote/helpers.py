@@ -42,6 +42,9 @@ class CandidateVoteCount:
     def as_candidate_result(self) -> CandidateResult:
         return CandidateResult(self.candidate, self.number_of_votes, self.status)
 
+    def __repr__(self):
+        return "<CandidateVoteCount(candidate='%s, votes=%.2f')>" % (self.candidate.name, self.number_of_votes)
+
 
 class CompareMethodIfEqual:
     Random = "Random"
@@ -86,6 +89,10 @@ class ElectionManager:
         # After votes are distributed -> sort candidates
         # This is also done each time transfer_votes(...) is called
         self._sort_candidates_in_race()
+
+    def __repr__(self):
+        candidate_name_and_votes_str = ", ".join(["%s: %.2f" % (candidate_vc.name, candidate_vc.number_of_votes) for candidate_vc in self.get_candidates_in_race()])
+        return "<ElectionManager(%s)>" % (candidate_name_and_votes_str)
 
     # METHODS WITH SIDE-EFFECTS
 

@@ -13,7 +13,7 @@ class Candidate:
         return self.name
 
     def __repr__(self):
-        return "Candidate(name='%s')" % self.name
+        return "<Candidate('%s')>" % self.name
 
     def __hash__(self):
         return hash(self.name)
@@ -36,6 +36,10 @@ class Ballot:
             raise TypeError("Not all objects in ranked candidate list are of class Candidate or implement the same properties and methods")
 
         self.ranked_candidates = ranked_candidates
+
+    def __repr__(self):
+        candidate_name = ", ".join([candidate.name for candidate in self.ranked_candidates])
+        return "<Ballot(%s)>" % (candidate_name)
 
     @staticmethod
     def _is_duplicates(ranked_candidates):
