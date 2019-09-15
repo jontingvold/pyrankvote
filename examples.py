@@ -83,34 +83,18 @@ print(election_result)
 ROUND 1
 Candidate                    Votes  Status
 -------------------------  -------  --------
-Thomas, far-left                 4  Hopeful
 William, popular moderate        4  Hopeful
+Thomas, far-left                 4  Hopeful
 John, moderate                   2  Hopeful
 Charles, moderate                0  Hopeful
 
-ROUND 2
-Candidate                    Votes  Status
--------------------------  -------  --------
-Thomas, far-left                 4  Hopeful
-William, popular moderate        4  Hopeful
-John, moderate                   2  Hopeful
-Charles, moderate                0  Rejected
-
-ROUND 3
-Candidate                    Votes  Status
--------------------------  -------  --------
-William, popular moderate        6  Hopeful
-Thomas, far-left                 4  Hopeful
-John, moderate                   0  Rejected
-Charles, moderate                0  Rejected
-
 FINAL RESULT
-Candidate                    Votes  Status
--------------------------  -------  --------
-William, popular moderate        6  Elected
-Thomas, far-left                 4  Elected
-John, moderate                   0  Rejected
-Charles, moderate                0  Rejected
+Candidate                     Votes  Status
+-------------------------  --------  --------
+William, popular moderate  3.33333   Elected
+Thomas, far-left           3.33333   Elected
+John, moderate             3         Hopeful
+Charles, moderate          0.333333  Hopeful
 """
 
 # PREFERENTIAL BLOCK VOTING

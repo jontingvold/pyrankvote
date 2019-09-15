@@ -74,7 +74,7 @@ def single_transferable_vote(candidates: List[Candidate], ballots: List[Ballot],
     Voters rank candidates and are granted as one vote each. If a candidate gets more votes than the threshold for being
     elected, the candidate is proclaimed as winner. This function uses the Droop quota, where
 
-        droop_quota = votes/(seats+1) + 1
+        droop_quota = votes/(seats+1)
 
     If one candidate get more votes than the threshold the excess votes are transfered to voters that voted for this
     candidate's 2nd (or 3rd, 4th etc) alternative. If no candidate get over the threshold, the candidate with fewest votes
@@ -85,7 +85,7 @@ def single_transferable_vote(candidates: List[Candidate], ballots: List[Ballot],
 
     voters = len(ballots)
     seats = number_of_seats
-    drop_quota: int = math.ceil(voters/float((seats+1)))
+    drop_quota: int = voters/float((seats+1))
     votes_needed_to_win = drop_quota
 
     manager = ElectionManager(
