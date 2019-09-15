@@ -58,7 +58,6 @@ class ElectionManager:
     def __init__(self,
                  candidates: List[Candidate],
                  ballots: List[Ballot],
-                 seats=1,
                  number_of_votes_pr_voter=1,
                  compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes):
 

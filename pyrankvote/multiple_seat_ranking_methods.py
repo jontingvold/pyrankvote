@@ -35,7 +35,6 @@ def preferential_block_voting(candidates: List[Candidate], ballots: List[Ballot]
     manager = ElectionManager(
         candidates,
         ballots,
-        seats=number_of_seats,
         number_of_votes_pr_voter=number_of_seats,
         compare_method_if_equal=compare_method_if_equal
     )
@@ -92,7 +91,6 @@ def single_transferable_vote(candidates: List[Candidate], ballots: List[Ballot],
     manager = ElectionManager(
         candidates,
         ballots,
-        seats=number_of_seats,
         number_of_votes_pr_voter=1,
         compare_method_if_equal=compare_method_if_equal
     )
