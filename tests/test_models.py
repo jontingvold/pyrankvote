@@ -11,7 +11,7 @@ class TestCandidate(unittest.TestCase):
         candidate3 = pyrankvote.Candidate("Aase")
 
         self.assertEqual(candidate1, candidate2, "These candidates should be equal/the same candidate.")
-        self.assertEqual(candidate1, candidate3, "These candidates should NOT be equal/the same candidate.")
+        self.assertNotEqual(candidate1, candidate3, "These candidates should NOT be equal/the same candidate.")
 
 
 class TestBallot(unittest.TestCase):
