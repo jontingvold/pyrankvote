@@ -6,6 +6,8 @@ You can create and use your own Candidate and Ballot models as long as they impl
 
 
 class Candidate:
+    """A candidate in the election."""
+
     def __init__(self, name):
         self.name = name
 
@@ -29,6 +31,12 @@ class DuplicateCandidatesError(RuntimeError): pass
 
 
 class Ballot:
+    """
+    A ballot (vote) where the voter has ranked all, or just some, of the candidates.
+
+    If a voter lists one candidate multiple times, a DuplicateCandidatesError is thrown.
+    """
+
     def __init__(self, ranked_candidates):
         ranked_candidates = tuple(ranked_candidates)
 

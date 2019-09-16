@@ -3,56 +3,59 @@ from pyrankvote import Candidate, Ballot
 
 # ONE SEAT ELECTION: INSTANT RUNOFF VOTING
 
-trump = Candidate("Donald Trump")
-hillary = Candidate("Hillary Clinton")
-johnson = Candidate("Gary Johnson")
+bush = Candidate("George W. Bush (Republican)")
+gore = Candidate("Al Gore (Democratic)")
+nader = Candidate("Ralph Nader (Green)")
 
-candidates = [trump, hillary, johnson]
+candidates = [bush, gore, nader]
 
+# Bush have most first choice votes, but because Ralph Nader-voters want
+# Al Gore if Nader is not elected, the elected candidate is Al Gore
 ballots = [
-    Ballot(ranked_candidates=[trump, johnson, hillary]),
-    Ballot(ranked_candidates=[trump, johnson, hillary]),
-    Ballot(ranked_candidates=[trump, johnson]),
-    Ballot(ranked_candidates=[trump, johnson]),
-    Ballot(ranked_candidates=[johnson, hillary, trump]),
-    Ballot(ranked_candidates=[johnson, hillary]),
-    Ballot(ranked_candidates=[hillary, johnson, trump]),
-    Ballot(ranked_candidates=[hillary, johnson]),
-    Ballot(ranked_candidates=[hillary, johnson])
+    Ballot(ranked_candidates=[bush, nader, gore]),
+    Ballot(ranked_candidates=[bush, nader, gore]),
+    Ballot(ranked_candidates=[bush, nader]),
+    Ballot(ranked_candidates=[bush, nader]),
+    Ballot(ranked_candidates=[nader, gore, bush]),
+    Ballot(ranked_candidates=[nader, gore]),
+    Ballot(ranked_candidates=[gore, nader, bush]),
+    Ballot(ranked_candidates=[gore, nader]),
+    Ballot(ranked_candidates=[gore, nader])
 ]
 
 # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
 election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
 
 winners = election_result.get_winners()
+# Returns: [<Candidate('Al Gore (Democratic)')>]
 
 print(election_result)
-
+# Prints:
 """
 ROUND 1
-Candidate          Votes  Status
----------------  -------  --------
-Donald Trump           4  Hopeful
-Hillary Clinton        3  Hopeful
-Gary Johnson           2  Hopeful
+Candidate                      Votes  Status
+---------------------------  -------  --------
+George W. Bush (Republican)        4  Hopeful
+Al Gore (Democratic)               3  Hopeful
+Ralph Nader (Green)                2  Hopeful
 
 ROUND 2
-Candidate          Votes  Status
----------------  -------  --------
-Hillary Clinton        5  Hopeful
-Donald Trump           4  Hopeful
-Gary Johnson           0  Rejected
+Candidate                      Votes  Status
+---------------------------  -------  --------
+Al Gore (Democratic)               5  Hopeful
+George W. Bush (Republican)        4  Hopeful
+Ralph Nader (Green)                0  Rejected
 
 FINAL RESULT
-Candidate          Votes  Status
----------------  -------  --------
-Hillary Clinton        9  Elected
-Donald Trump           0  Rejected
-Gary Johnson           0  Rejected
+Candidate                      Votes  Status
+---------------------------  -------  --------
+Al Gore (Democratic)               9  Elected
+George W. Bush (Republican)        0  Rejected
+Ralph Nader (Green)                0  Rejected
 """
 
 
-# 2 SEAT ELECTION
+# TWO SEAT ELECTION
 
 popular_moderate = Candidate("William, popular moderate")
 moderate2 = Candidate("John, moderate")
@@ -75,10 +78,13 @@ ballots = [
     Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
 ]
 
-# INSTANT RUNOFF VOTING
+# SINGLE TRANSFERABLE VOTE
+
 election_result = pyrankvote.single_transferable_vote(candidates, ballots, number_of_seats=2)
-# Elects: William, popular moderate, and Thomas, far-left
+# Elects: William, popular moderate; and Thomas, far-left
+
 print(election_result)
+# Prints:
 """
 ROUND 1
 Candidate                    Votes  Status
@@ -98,9 +104,12 @@ Charles, moderate          0.333333  Hopeful
 """
 
 # PREFERENTIAL BLOCK VOTING
+
 election_result = pyrankvote.preferential_block_voting(candidates, ballots, number_of_seats=2)
-# Elects: William, popular moderate, and John, moderate
+# Elects: William, popular moderate; and John, moderate
+
 print(election_result)
+# Prints:
 """
 ROUND 1
 Candidate                    Votes  Status

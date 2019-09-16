@@ -10,8 +10,10 @@ from typing import List, NamedTuple
 from tabulate import tabulate
 
 
+CONSIDERED_EQUAL_MARGIN = 0.001
+
+
 def almost_equal(value1, value2):
-    CONSIDERED_EQUAL_MARGIN = 0.001
     return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
 
 
@@ -51,10 +53,31 @@ class CompareMethodIfEqual:
     MostSecondChoiceVotes = "MostSecondChoiceVotes"
 
 
-class NoCandidatesLeftInRaceError(RuntimeError): pass
+class NoCandidatesLeftInRaceError(RuntimeError):
+    pass
 
 
 class ElectionManager:
+    """
+    ElectionManager is a abstract class that take care of managing the counting of votes.
+    It implements common functionality among the ranking methods.
+
+    ElectionManager is initialized by giving it the list of candidates and ballots,
+    and configure settings like number of votes each person has (used in preferential block voting)
+    and what to do if two voters have the same number of votes. It can then ether choose to
+    rank candidates based on the voters who has most second choice votes (and if equal third
+    choice votes, fourth etc.) or just choose randomly.
+
+    After initialization ranking methods can get the ranked candidates list, elect or reject a candidate,
+    or distribute a part of the number of votes of one candidate to the second choices to the voters that voted
+    for this candidate. The last method is used, among other things, by Single Transferable Votes to distribute
+    excess votes if a candidate gets more votes than necessary. That way even if many people voted for this
+    candidate, the votes are still useful.
+
+    transfer_votes(..) and other methods that effects the proper ranking of candidates, re-sorts
+    the ranking of candidates, so _candidates_in_race should always be properly sorted.
+    """
+
     def __init__(self,
                  candidates: List[Candidate],
                  ballots: List[Ballot],
@@ -267,6 +290,21 @@ class ElectionManager:
 
 
 class ElectionResults:
+    """
+    ElectionResults store the result of all rounds in the election:
+
+     - the ranking of candidates
+     - how many votes they got
+     - their election status (elected, hopeful, rejected)
+
+    ElectionResults.get_winners() makes it trivial to receive the elected candidates.
+
+    ElectedResults can be printed:
+
+    > elected_results = pyrankvote.single_transferable_vote(candidates, ballots)
+    > print(elected_results)
+    """
+
     def __init__(self):
         self.rounds: List[List[CandidateResult]] = []
 
