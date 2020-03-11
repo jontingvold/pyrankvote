@@ -1,5 +1,3 @@
-test_data/external_irv/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
