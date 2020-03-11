@@ -8,8 +8,9 @@ jobs:
         - run:
             command: |
                 sudo python setup.py install
+                sudo pip install PyYAML
                 sudo pip install coverage
-                sudo pip install python-coveralls
+                sudo pip install coveralls
         - run:
             command: |
                 sudo coverage run setup.py test
