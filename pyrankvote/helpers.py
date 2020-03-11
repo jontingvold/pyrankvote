@@ -13,7 +13,7 @@ from tabulate import tabulate
 CONSIDERED_EQUAL_MARGIN = 0.001
 
 
-def almost_equal(value1, value2):
+def almost_equal(value1: float, value2: float) -> bool:
     return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
 
 
@@ -29,6 +29,40 @@ class CandidateResult(NamedTuple):
     status: CandidateStatus
 
 
+class RoundResult:
+    candidate_results: [CandidateResult]
+    number_of_blank_votes: float
+
+    def __init__(self, candidate_results, number_of_blank_votes):
+        self.candidate_results = candidate_results
+        self.number_of_blank_votes = number_of_blank_votes
+
+    def __repr__(self):
+        representation_string = "<RoundResult>"
+        return representation_string
+
+    def __str__(self):
+        if almost_equal(self.number_of_blank_votes, 0.0):
+            results_with_blank_votes = self.candidate_results
+        else:
+            blank_votes_as_candidate_results = [("Blank votes", self.number_of_blank_votes, CandidateStatus.Rejected)]
+            results_with_blank_votes = self.candidate_results + blank_votes_as_candidate_results
+
+        all_integers = all([float(candidateResult[1]).is_integer() for candidateResult in results_with_blank_votes])
+        if all_integers:
+            float_format = ".0f"
+        else:
+            float_format = ".2f"
+
+        pretty_print_string = tabulate(
+            results_with_blank_votes,
+            headers=['Candidate', 'Votes', 'Status'],
+            floatfmt=float_format
+        )
+
+        return pretty_print_string
+
+
 class CandidateVoteCount:
     def __init__(self, candidate: Candidate):
         self.candidate = candidate
@@ -38,13 +72,13 @@ class CandidateVoteCount:
         self.votes: List[Ballot] = []
 
     @property
-    def is_in_race(self):
+    def is_in_race(self) -> bool:
         return self.status == CandidateStatus.Hopeful
 
     def as_candidate_result(self) -> CandidateResult:
         return CandidateResult(self.candidate, self.number_of_votes, self.status)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<CandidateVoteCount(candidate='%s, votes=%.2f')>" % (self.candidate.name, self.number_of_votes)
 
 
@@ -82,7 +116,8 @@ class ElectionManager:
                  candidates: List[Candidate],
                  ballots: List[Ballot],
                  number_of_votes_pr_voter=1,
-                 compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes):
+                 compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+                 pick_random_if_blank=False):
 
         self._ballots = ballots
         self._candidate_vote_counts: dict[Candidate: CandidateVoteCount] = {
@@ -92,16 +127,30 @@ class ElectionManager:
         self._candidates_in_race: List[CandidateVoteCount] = list(self._candidate_vote_counts.values())
         self._elected_candidates: List[CandidateVoteCount] = []  # Sorted asc by election round
         self._rejected_candidates: List[CandidateVoteCount] = []  # Sorted desc by election round
+        self._exhausted_ballots: List[Ballot] = []  # Blank and exhausted ballots (all alternatives used up)
+        self._number_of_blank_votes = 0.0
 
         self._number_of_candidates = len(candidates)
         self._number_of_votes_pr_voter = number_of_votes_pr_voter
         self._compare_method_if_equal = compare_method_if_equal
+        self._pick_random_if_blank = pick_random_if_blank
 
         # Distribute votes to the most preferred candidates (before any candidates are elected or rejected)
         for ballot in ballots:
             # If one vote per voter -> Voters vote goes to the first candidate on the ranked list
             # If more than one vote per voter -> Voters votes goes to the x first candidates on the ranked list
             candidates_that_should_be_voted_on = ballot.ranked_candidates[0:number_of_votes_pr_voter]
+
+            number_of_blank_votes = number_of_votes_pr_voter - len(ballot.ranked_candidates)
+            if number_of_blank_votes > 0:
+                if self._pick_random_if_blank:
+                    candidates_that_should_be_voted_on = list(candidates_that_should_be_voted_on)
+                    for _ in range(number_of_blank_votes):
+                        new_candidate_choice = random.choice(candidates)
+                        candidates_that_should_be_voted_on.append(new_candidate_choice)
+                else:
+                    self._exhausted_ballots.append(ballot)
+                    self._number_of_blank_votes += number_of_blank_votes
 
             for candidate in candidates_that_should_be_voted_on:
                 candidate_vc = self._candidate_vote_counts[candidate]
@@ -112,7 +161,7 @@ class ElectionManager:
         # This is also done each time transfer_votes(...) is called
         self._sort_candidates_in_race()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         candidate_name_and_votes_str = ", ".join(["%s: %.2f" % (candidate_vc.name, candidate_vc.number_of_votes) for candidate_vc in self.get_candidates_in_race()])
         return "<ElectionManager(%s)>" % (candidate_name_and_votes_str)
 
@@ -155,19 +204,23 @@ class ElectionManager:
 
         for ballot in candidate_cv.votes:
             new_candidate_choice = self._get_ballot_candidate_nr_x_in_race_or_none(ballot, self._number_of_votes_pr_voter - 1)
+            # Is none if blank or exhausted ballot
 
-            if new_candidate_choice is None:
+            if new_candidate_choice is None and self._pick_random_if_blank:
                 # Chose a candidate at random
                 candidates_in_race = self.get_candidates_in_race()
-                if len(candidates_in_race) == 0:
-                    # If no candidates left in race, do nothing
-                    return
-                else:
+                if len(candidates_in_race) > 0:
                     new_candidate_choice = random.choice(candidates_in_race)
 
-            new_candidate_cv = self._candidate_vote_counts[new_candidate_choice]
-            new_candidate_cv.number_of_votes += votes_pr_voter
-            new_candidate_cv.votes.append(ballot)
+            if new_candidate_choice:
+                new_candidate_cv = self._candidate_vote_counts[new_candidate_choice]
+                new_candidate_cv.number_of_votes += votes_pr_voter
+                new_candidate_cv.votes.append(ballot)
+
+            # Still "Blank ballot"
+            else:
+                self._exhausted_ballots.append(ballot)
+                self._number_of_blank_votes += votes_pr_voter
 
         candidate_cv.number_of_votes -= number_of_trans_votes
         candidate_cv.votes = []
@@ -175,6 +228,14 @@ class ElectionManager:
         self._sort_candidates_in_race()
 
     # METHODS WITHOUT SIDE-EFFECTS
+
+    def get_number_of_non_exhausted_votes(self):
+        """Returns number of votes excluding blank and exhausted ballots"""
+        return len(self._ballots)*self._number_of_votes_pr_voter - self._number_of_blank_votes
+
+    def get_number_of_non_exhausted_ballots(self):
+        """Returns number of ballots excluding blank and exhausted ballots"""
+        return len(self._ballots) - len(self._exhausted_ballots)
 
     def get_number_of_candidates_in_race(self) -> int:
         return len(self._candidates_in_race)
@@ -212,17 +273,19 @@ class ElectionManager:
         ]
         return candidates
 
-    def get_results(self) -> List[CandidateResult]:
+    def get_results(self) -> RoundResult:
         candidates_vc: List[CandidateVoteCount] = []
         candidates_vc.extend(self._elected_candidates)
         candidates_vc.extend(self._candidates_in_race)
         candidates_vc.extend(self._rejected_candidates[::-1])
 
         candidate_results = [candidate_vc.as_candidate_result() for candidate_vc in candidates_vc]
-        return candidate_results
+
+        round_result = RoundResult(candidate_results, self._number_of_blank_votes)
+        return round_result
 
     # INTERNAL METHODS
-    def _get_ballot_candidate_nr_x_in_race_or_none(self, ballot, x) -> Candidate:
+    def _get_ballot_candidate_nr_x_in_race_or_none(self, ballot: Ballot, x: int) -> Candidate:
         ranked_candidates_in_race = [
             candidate
             for candidate in ballot.ranked_candidates
@@ -266,7 +329,8 @@ class ElectionManager:
             else:
                 raise SystemError("Compare method unknown/not implemented.")
 
-    def _candidate1_has_most_second_choices(self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount, x) -> bool:
+    def _candidate1_has_most_second_choices(self, candidate1_vc: CandidateVoteCount,
+                                            candidate2_vc: CandidateVoteCount, x: int) -> bool:
         if x >= self._number_of_candidates:
             return random.choice([True, False])
 
@@ -306,24 +370,24 @@ class ElectionResults:
     """
 
     def __init__(self):
-        self.rounds: List[List[CandidateResult]] = []
+        self.rounds: List[RoundResult] = []
 
-    def register_round_results(self, round: List[CandidateResult]):
-        self.rounds.append(round)
+    def register_round_results(self, round_: RoundResult):
+        self.rounds.append(round_)
 
     def get_winners(self) -> List[Candidate]:
         last_round = self.rounds[-1]
         winner_candidates = [
             candidate_result.candidate
-            for candidate_result in last_round
+            for candidate_result in last_round.candidate_results
             if candidate_result.status == CandidateStatus.Elected
         ]
         return winner_candidates
 
-    def __repr__(self):
-        return "ElectionResults(%i rounds)" % len(self.rounds)
+    def __repr__(self) -> str:
+        return "<ElectionResults(%i rounds)>" % len(self.rounds)
 
-    def __str__(self):
+    def __str__(self) -> str:
         lines = []
         for i, round_ in enumerate(self.rounds):
 
@@ -335,7 +399,7 @@ class ElectionResults:
                 lines.append("ROUND %i" % round_nr)
 
             # Print table
-            lines.append(tabulate(round_, headers=['Candidate', 'Votes', 'Status']))
+            lines.append(round_.__str__())
 
             # Print an extra blank line
             lines.append("")

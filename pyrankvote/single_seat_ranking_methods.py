@@ -7,16 +7,19 @@ Instant runoff voting is the only implemented ranking method so far.
 from typing import List
 from pyrankvote.helpers import CompareMethodIfEqual, ElectionResults
 from pyrankvote.models import Candidate, Ballot
-from pyrankvote.multiple_seat_ranking_methods import preferential_block_voting
+from pyrankvote import multiple_seat_ranking_methods
 
 
-def instant_runoff_voting(candidates: List[Candidate], ballots: List[Ballot],
-                          compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes
-                          ) -> ElectionResults:
+def instant_runoff_voting(
+        candidates: List[Candidate],
+        ballots: List[Ballot],
+        compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+        pick_random_if_blank=True
+    ) -> ElectionResults:
     """
     Instant runoff voting (IRV), often known as the alternative vote, is a singe candidate election method,
     that elected the candidate that get draw majority support (more than 50%).
-    
+
     IRV is the same as Preferential block voting and Single transferable vote with only one electable candidate.
 
     Voters rank candidates and are granted one vote. The candidate with fewest votes are removed and this voters votes
@@ -30,4 +33,10 @@ def instant_runoff_voting(candidates: List[Candidate], ballots: List[Ballot],
     For more info see Wikipedia.
     """
 
-    return preferential_block_voting(candidates, ballots, number_of_seats=1, compare_method_if_equal=compare_method_if_equal)
+    return multiple_seat_ranking_methods.preferential_block_voting(
+        candidates,
+        ballots,
+        number_of_seats=1,
+        compare_method_if_equal=compare_method_if_equal,
+        pick_random_if_blank=pick_random_if_blank
+    )

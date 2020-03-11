@@ -9,11 +9,16 @@ Implemented methods:
 from typing import List
 from pyrankvote.helpers import CompareMethodIfEqual, ElectionManager, ElectionResults
 from pyrankvote.models import Candidate, Ballot
+import math
 
 
-def preferential_block_voting(candidates: List[Candidate], ballots: List[Ballot], number_of_seats: int,
-                              compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes
-                              ) -> ElectionResults:
+def preferential_block_voting(
+        candidates: List[Candidate],
+        ballots: List[Ballot],
+        number_of_seats: int,
+        compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+        pick_random_if_blank=True
+    ) -> ElectionResults:
     """
     Preferential block voting (PBV) is a multiple candidate election method, that elected the candidate that can
     draw majority support (more than 50%). Minority groups therefore lose their representation.
@@ -31,39 +36,97 @@ def preferential_block_voting(candidates: List[Candidate], ballots: List[Ballot]
     For more info see Wikipedia.
     """
 
+    rounding_error = 1e-6
+
     manager = ElectionManager(
         candidates,
         ballots,
         number_of_votes_pr_voter=number_of_seats,
-        compare_method_if_equal=compare_method_if_equal
+        compare_method_if_equal=compare_method_if_equal,
+        pick_random_if_blank=pick_random_if_blank
     )
     election_results = ElectionResults()
 
     # Remove worst candidate until same number of candidates left as electable
     # While it is more candidates left than electable
-    while manager.get_number_of_candidates_in_race() > number_of_seats:
-        # Register partial result
+    while True:
+        majority_limit = math.ceil(manager.get_number_of_non_exhausted_ballots() / 2.0)
+
+        seats_left = number_of_seats - manager.get_number_of_elected_candidates()
+        candidates_in_race = manager.get_candidates_in_race()
+        candidates_in_race_votes: [float] = [manager.get_number_of_votes(candidate) for candidate in candidates_in_race]
+
+        votes_remaining = sum(candidates_in_race_votes)
+        last_votes = 0.0
+        candidates_to_elect = []
+        candidates_to_reject = []
+
+        for i, candidate in enumerate(candidates_in_race):
+            votes_for_candidate = candidates_in_race_votes[i]
+            is_last_candidate = i == len(candidates_in_race) - 1
+
+            # Elect candidates with a majority
+            if (votes_for_candidate - rounding_error) >= majority_limit:
+                candidates_to_elect.append(candidate)
+
+            # Reject candidates that even with redistribution can't change the results
+            elif i >= seats_left and (votes_remaining - rounding_error) <= last_votes:
+                candidates_to_reject.append(candidate)
+
+            elif is_last_candidate:
+                # Should be catched by if statement above
+                raise RuntimeError("Illigal state")
+
+            last_votes = votes_for_candidate
+            votes_remaining -= votes_for_candidate
+
+        for candidate in candidates_to_elect:
+            manager.elect_candidate(candidate)
+
+        for candidate in candidates_to_reject[::-1]:
+            manager.reject_candidate(candidate)
+
+        # If same number of seats left as there are candidates, elect all candidates
+        seats_left = number_of_seats - manager.get_number_of_elected_candidates()
+        if manager.get_number_of_candidates_in_race() <= seats_left:
+            for candidate in manager.get_candidates_in_race():
+                candidates_to_elect.append(candidate)
+                manager.elect_candidate(candidate)
+
+        # If no seats left, reject the rest of the candidates
+        seats_left = number_of_seats - manager.get_number_of_elected_candidates()
+        if seats_left == 0:
+            for candidate in manager.get_candidates_in_race()[::-1]:
+                candidates_to_reject.append(candidate)
+                manager.reject_candidate(candidate)
+
+        # Register round result
         election_results.register_round_results(manager.get_results())
 
-        last_candidate = manager.get_candidate_with_least_votes_in_race()
-        manager.reject_candidate(last_candidate)
+        # If all seats filled
+        if manager.get_number_of_candidates_in_race() == 0:
+            break
 
-        number_of_votes: float = manager.get_number_of_votes(last_candidate)
-        manager.transfer_votes(last_candidate, number_of_votes)
+        else:
+            # For voters who voted on rejected candidates,
+            # transfer votes to 2nd choice (or 3rd, 4th etc.)
+            for candidate in candidates_to_reject:
+                number_of_votes = manager.get_number_of_votes(candidate)
+                manager.transfer_votes(candidate, number_of_votes)
 
-    # The last candidates standing are winners
-    for candidate in manager.get_candidates_in_race():
-        manager.elect_candidate(candidate)
-
-    # Register final result
-    election_results.register_round_results(manager.get_results())
+            # New round
+            continue
 
     return election_results
 
 
-def single_transferable_vote(candidates: List[Candidate], ballots: List[Ballot], number_of_seats: int,
-                             compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes
-                             ) -> ElectionResults:
+def single_transferable_vote(
+        candidates: List[Candidate],
+        ballots: List[Ballot],
+        number_of_seats: int,
+        compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+        pick_random_if_blank=True
+    ) -> ElectionResults:
     """
     Single transferable vote (STV) is a multiple candidate election method, that elected the candidate that can
     based on proportional representation. Minority groups therefore get representation.
@@ -82,53 +145,98 @@ def single_transferable_vote(candidates: List[Candidate], ballots: List[Ballot],
     For more info see Wikipedia.
     """
 
-    voters = len(ballots)
-    seats = number_of_seats
-    drop_quota: int = voters/float((seats+1))
-    votes_needed_to_win = drop_quota
+    rounding_error = 1e-6
 
     manager = ElectionManager(
         candidates,
         ballots,
         number_of_votes_pr_voter=1,
-        compare_method_if_equal=compare_method_if_equal
+        compare_method_if_equal=compare_method_if_equal,
+        pick_random_if_blank=pick_random_if_blank
     )
     election_results = ElectionResults()
 
-    # Elect candidates with more votes than quota and redistribute excess votes
-    # and remove worst candidate and redistribute votes
-    # until all seats filled
-    while manager.get_number_of_elected_candidates() < number_of_seats:
+    voters, seats = manager.get_number_of_non_exhausted_ballots(), number_of_seats
+    votes_needed_to_win: float = voters / float((seats + 1))  # Drop quota
 
-        # Register partial result
+    # Remove worst candidate until same number of candidates left as electable
+    # While it is more candidates left than electable
+    while True:
+        seats_left = number_of_seats - manager.get_number_of_elected_candidates()
+        candidates_in_race = manager.get_candidates_in_race()
+        candidates_in_race_votes: [float] = [manager.get_number_of_votes(candidate) for candidate in candidates_in_race]
+
+        votes_remaining = sum(candidates_in_race_votes)
+        last_votes = 0.0
+        candidates_to_elect = []
+        candidates_to_reject = []
+
+        for i, candidate in enumerate(candidates_in_race):
+            votes_for_candidate = candidates_in_race_votes[i]
+            is_last_candidate = i == len(candidates_in_race) - 1
+
+            # Elect candidates with more votes than Drop quota
+            if (votes_for_candidate - rounding_error) >= votes_needed_to_win:
+                candidates_to_elect.append(candidate)
+
+            # Reject candidates that even with redistribution can't change the results
+            elif i >= seats_left and (votes_remaining - rounding_error) <= last_votes:
+                if len(candidates_to_elect) > 0:
+                    # Don't reject candidates if there are elected candidates that have not yet
+                    # redistributed their votes
+                    break
+                else:
+                    candidates_to_reject.append(candidate)
+
+            elif is_last_candidate:
+                # Should be catched by if statement above
+                raise RuntimeError("Illigal state")
+
+            last_votes = votes_for_candidate
+            votes_remaining -= votes_for_candidate
+
+        for candidate in candidates_to_elect:
+            manager.elect_candidate(candidate)
+
+        for candidate in candidates_to_reject[::-1]:
+            manager.reject_candidate(candidate)
+
+        # If same number of seats left as there are candidates, elect all candidates
+        seats_left = number_of_seats - manager.get_number_of_elected_candidates()
+        if manager.get_number_of_candidates_in_race() <= seats_left:
+            for candidate in manager.get_candidates_in_race():
+                candidates_to_elect.append(candidate)
+                manager.elect_candidate(candidate)
+
+        # If no seats left, reject the rest of the candidates
+        seats_left = number_of_seats - manager.get_number_of_elected_candidates()
+        if seats_left == 0:
+            for candidate in manager.get_candidates_in_race()[::-1]:
+                candidates_to_reject.append(candidate)
+                manager.reject_candidate(candidate)
+
+        # Register round result
         election_results.register_round_results(manager.get_results())
 
-        number_of_seats_left = number_of_seats - manager.get_number_of_elected_candidates()
-        if manager.get_number_of_candidates_in_race() == number_of_seats_left:
-            # Elect all candidates left in race
-            for candidate in manager.get_candidates_in_race():
-                manager.elect_candidate(candidate)
+        # If all seats filled
+        if manager.get_number_of_candidates_in_race() == 0:
             break
 
-        winner_candidates = manager.get_candidates_with_more_than_x_votes(votes_needed_to_win)
-
-        if len(winner_candidates) > 0:
-            for winner_candidate in winner_candidates:
-                # Transfer only excess votes to 2nd choice (or 3rd, 4th etc.)
-                number_of_votes: float = manager.get_number_of_votes(winner_candidate)
-                excess_votes: float = number_of_votes - votes_needed_to_win
-
-                manager.elect_candidate(winner_candidate)
-                manager.transfer_votes(winner_candidate, excess_votes)
-
         else:
-            last_candidate = manager.get_candidate_with_least_votes_in_race()
-            manager.reject_candidate(last_candidate)
+            # For voters who votes for elected candidates,
+            # transfer excess votes to 2nd choice (or 3rd, 4th etc.)
+            for candidate in candidates_to_elect:
+                votes_for_candidate = manager.get_number_of_votes(candidate)
+                excess_votes: float = votes_for_candidate - votes_needed_to_win
+                manager.transfer_votes(candidate, excess_votes)
 
-            number_of_votes: float = manager.get_number_of_votes(last_candidate)
-            manager.transfer_votes(last_candidate, number_of_votes)
+            # For votes who votes on rejected candidates,
+            # transfer all votes to 2nd choice (or 3rd, 4th etc.)
+            for candidate in candidates_to_reject:
+                votes_for_candidate = manager.get_number_of_votes(candidate)
+                manager.transfer_votes(candidate, votes_for_candidate)
 
-    # Register final result
-    election_results.register_round_results(manager.get_results())
+            # New round
+            continue
 
     return election_results

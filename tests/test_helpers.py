@@ -54,11 +54,11 @@ class TestElectionManager(unittest.TestCase):
         self.assertListEqual(manager._elected_candidates, [], "List of elected candidates should be empty after init")
         self.assertListEqual(manager._rejected_candidates, [], "List of elected candidates should be empty after init")
 
-        candidate_votes = [candidate_result.number_of_votes for candidate_result in candidate_results]
+        candidate_votes = [candidate_result.number_of_votes for candidate_result in candidate_results.candidate_results]
         correct_candidate_votes = [1.0, 1.0, 1.0]
         assert_list_almost_equal(self, candidate_votes, correct_candidate_votes, 0.001, "Votes not counted correctly.")
 
-        candidate_status = [candidate_result.status for candidate_result in candidate_results]
+        candidate_status = [candidate_result.status for candidate_result in candidate_results.candidate_results]
         hopeful = helpers.CandidateStatus.Hopeful
         correct_candidate_status = [hopeful, hopeful, hopeful]
         self.assertListEqual(candidate_status, correct_candidate_status, "All candidates should have status Hopeful")

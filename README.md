@@ -52,7 +52,7 @@ For more info:
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install (or upgrade) pyrankvote.
+With pip package manager:
 
 ```bash
 pip install pyrankvote
@@ -98,20 +98,13 @@ Candidate                      Votes  Status
 ---------------------------  -------  --------
 George W. Bush (Republican)        4  Hopeful
 Al Gore (Democratic)               3  Hopeful
-Ralph Nader (Green)                2  Hopeful
-
-ROUND 2
-Candidate                      Votes  Status
----------------------------  -------  --------
-Al Gore (Democratic)               5  Hopeful
-George W. Bush (Republican)        4  Hopeful
-Ralph Nader (Green)                0  Rejected
+Ralph Nader (Green)                2  Rejected
 
 FINAL RESULT
 Candidate                      Votes  Status
 ---------------------------  -------  --------
-Al Gore (Democratic)               9  Elected
-George W. Bush (Republican)        0  Rejected
+Al Gore (Democratic)               5  Elected
+George W. Bush (Republican)        4  Rejected
 Ralph Nader (Green)                0  Rejected
 """
 ```
@@ -122,6 +115,11 @@ More examples in [examples.py](./examples.py)
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+Questions?
+----------
+
+Feel free to [send me an email](http://www.jontingvold.no/) if you have questions about the project.
 
 ## License
 [MIT](LICENSE.txt)

@@ -113,7 +113,9 @@ class TestInstantRunoffVoting(unittest.TestCase):
 
         # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
         election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
-        ranking_first_round = election_result.rounds[0]
+        ranking_first_round = election_result.rounds[0].candidate_results
+        blank_votes = election_result.rounds[0].number_of_blank_votes
 
         self.assertEqual(3, len(ranking_first_round), "Function should return a list with one item")
         self.assertListEqual([trump, hillary, mary], [candidate_result.candidate for candidate_result in ranking_first_round], "Winners should be Per")
+        self.assertEqual(0.0, blank_votes, "Should be zero blank votes as all ballots have ranked all candidates")

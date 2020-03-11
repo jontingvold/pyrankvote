@@ -37,20 +37,13 @@ Candidate                      Votes  Status
 ---------------------------  -------  --------
 George W. Bush (Republican)        4  Hopeful
 Al Gore (Democratic)               3  Hopeful
-Ralph Nader (Green)                2  Hopeful
-
-ROUND 2
-Candidate                      Votes  Status
----------------------------  -------  --------
-Al Gore (Democratic)               5  Hopeful
-George W. Bush (Republican)        4  Hopeful
-Ralph Nader (Green)                0  Rejected
+Ralph Nader (Green)                2  Rejected
 
 FINAL RESULT
 Candidate                      Votes  Status
 ---------------------------  -------  --------
-Al Gore (Democratic)               9  Elected
-George W. Bush (Republican)        0  Rejected
+Al Gore (Democratic)               5  Elected
+George W. Bush (Republican)        4  Rejected
 Ralph Nader (Green)                0  Rejected
 """
 
@@ -69,6 +62,7 @@ ballots = [
     Ballot(ranked_candidates=[popular_moderate, moderate2, moderate3, far_left]),
     Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
     Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
+
     Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
     Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
 
@@ -86,21 +80,13 @@ election_result = pyrankvote.single_transferable_vote(candidates, ballots, numbe
 print(election_result)
 # Prints:
 """
-ROUND 1
+FINAL RESULT
 Candidate                    Votes  Status
 -------------------------  -------  --------
-William, popular moderate        4  Hopeful
-Thomas, far-left                 4  Hopeful
-John, moderate                   2  Hopeful
-Charles, moderate                0  Hopeful
-
-FINAL RESULT
-Candidate                     Votes  Status
--------------------------  --------  --------
-William, popular moderate  3.33333   Elected
-Thomas, far-left           3.33333   Elected
-John, moderate             3         Hopeful
-Charles, moderate          0.333333  Hopeful
+William, popular moderate        4  Elected
+Thomas, far-left                 4  Elected
+John, moderate                   2  Rejected
+Charles, moderate                0  Rejected
 """
 
 # PREFERENTIAL BLOCK VOTING
@@ -111,27 +97,16 @@ election_result = pyrankvote.preferential_block_voting(candidates, ballots, numb
 print(election_result)
 # Prints:
 """
-ROUND 1
-Candidate                    Votes  Status
--------------------------  -------  --------
-William, popular moderate        8  Hopeful
-John, moderate                   6  Hopeful
-Thomas, far-left                 4  Hopeful
-Charles, moderate                2  Hopeful
-
-ROUND 2
-Candidate                    Votes  Status
--------------------------  -------  --------
-William, popular moderate        8  Hopeful
-John, moderate                   8  Hopeful
-Thomas, far-left                 4  Hopeful
-Charles, moderate                0  Rejected
-
 FINAL RESULT
 Candidate                    Votes  Status
 -------------------------  -------  --------
-John, moderate                  10  Elected
-William, popular moderate       10  Elected
-Thomas, far-left                 0  Rejected
-Charles, moderate                0  Rejected
+William, popular moderate        8  Elected
+John, moderate                   6  Elected
+Thomas, far-left                 4  Rejected
+Charles, moderate                2  Rejected
 """
+
+#   COMMENT
+#
+#   As you can see PBV produces moderate candidates all agree on.
+#   While STV produces representative candidates that better reflect the different voting groups.

@@ -31,7 +31,7 @@ setuptools.setup(
         'tabulate',
     ],
     
-    packages=setuptools.find_packages(exclude=['tests']),
+    packages=setuptools.find_packages(exclude=['tests', 'test_data']),
     
     test_suite="setup.my_test_suite",
     long_description=long_description,
