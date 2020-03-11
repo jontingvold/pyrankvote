@@ -14,7 +14,7 @@ def instant_runoff_voting(
         candidates: List[Candidate],
         ballots: List[Ballot],
         compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-        pick_random_if_blank=True
+        pick_random_if_blank=False
     ) -> ElectionResults:
     """
     Instant runoff voting (IRV), often known as the alternative vote, is a singe candidate election method,

@@ -17,7 +17,7 @@ def preferential_block_voting(
         ballots: List[Ballot],
         number_of_seats: int,
         compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-        pick_random_if_blank=True
+        pick_random_if_blank=False
     ) -> ElectionResults:
     """
     Preferential block voting (PBV) is a multiple candidate election method, that elected the candidate that can
@@ -125,7 +125,7 @@ def single_transferable_vote(
         ballots: List[Ballot],
         number_of_seats: int,
         compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-        pick_random_if_blank=True
+        pick_random_if_blank=False
     ) -> ElectionResults:
     """
     Single transferable vote (STV) is a multiple candidate election method, that elected the candidate that can
