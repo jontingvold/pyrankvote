@@ -113,22 +113,10 @@ More examples in [examples.py](./examples.py)
 
 ## Versions
 
-#### Version 2.0 (2020-04-08)
-
-First release I assume is stable enough to incurrage use. 
-
-##### Version (2020-04-08)
-
-#### Version 
-
-
-
-#### Version 
-
 - v2.0 (2020-04-08): **Compact round results and standard STV-procedure** 
-    - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with standard practice. The old practice can be reenabled with ´pyrankvote.single\_transferable\_vote(candidates, ballots, pick_random_if_blank=True)´
-- v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to incurrage use. 
-- v0.0 (2019-08-09): **Pre release**
+    - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `pyrankvote.single\_transferable\_vote(candidates, ballots, pick_random_if_blank=True)`
+- v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use. 
+- v0.0 (2019-08-09): **Pre-release**
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
