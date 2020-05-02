@@ -2,7 +2,7 @@
 
 PyRankVote —A Ranked Choice Voting System for Python
 ==========
-[![PyPI version](https://badge.fury.io/py/pyrankvote.svg)](https://badge.fury.io/py/pyrankvote)  [![Coverage Status](https://coveralls.io/repos/github/jontingvold/pyrankvote/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/pyrankvote?branch=master)  [![CircleCI](https://circleci.com/gh/jontingvold/pyrankvote/tree/master.svg?style=svg)](https://circleci.com/gh/jontingvold/pyrankvote/tree/master)
+[![PyPI version](https://badge.fury.io/py/pyrankvote.svg)](https://badge.fury.io/py/pyrankvote)  [![Coverage Status](https://coveralls.io/repos/github/jontingvold/pyrankvote/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/pyrankvote?branch=master)  [![CircleCI](https://circleci.com/gh/jontingvold/pyrankvote/tree/master.svg?style=svg)](https://circleci.com/gh/jontingvold/pyrankvote/tree/master) [![Downloads](https://pepy.tech/badge/pyrankvote)](https://pepy.tech/project/pyrankvote)
 
 PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
 
