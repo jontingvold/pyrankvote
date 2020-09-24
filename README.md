@@ -118,13 +118,17 @@ More examples in [examples.py](./examples.py)
 - v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use. 
 - v0.0 (2019-08-09): **Pre-release**
 
+## Popularity
+
+From 2019-09-15 to 2020-05-01 the library was downloaded around 400 times from PyPi (pip). That figure does not include downloads that look like they are coming from bots/mirrors/grab scripts.
+
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-Questions?
-----------
+## Questions?
 
 Feel free to [send me an email](http://www.jontingvold.no/) if you have questions about the project.
 
