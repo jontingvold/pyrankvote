@@ -31,18 +31,13 @@ jobs:
       run: |
         pytest
         
-  update-coverage-badge:
+  test-setup-and-update-coverage-badge:
+    needs: test-multiple-python-versions
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.8
       uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -52,6 +47,5 @@ jobs:
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
-        echo "COVERALLS_REPO_TOKEN: $COVERALLS_REPO_TOKEN"
         coverage run setup.py test
         coveralls
