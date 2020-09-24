@@ -52,5 +52,6 @@ jobs:
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
+        echo "COVERALLS_REPO_TOKEN: $COVERALLS_REPO_TOKEN"
         coverage run setup.py test
         coveralls
