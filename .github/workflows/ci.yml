@@ -1,17 +1,16 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Test
+name: CI
 
 on:
   push:
-    branches: [ master, stable ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, stable ]
+    branches: [ master ]
 
 jobs:
-  build:
-
+  test-multiple-python-versions:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,3 +30,27 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+        
+  update-coverage-badge:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python setup.py install
+        pip install PyYAML coverage coveralls
+    - name: Test with pytest
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        coverage run setup.py test
+        coveralls
