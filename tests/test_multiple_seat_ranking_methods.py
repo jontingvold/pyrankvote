@@ -3,7 +3,7 @@ from pyrankvote.test_helpers import assert_list_almost_equal
 
 import pyrankvote
 from pyrankvote import Candidate, Ballot
-from pyrankvote.helpers import CandidateStatus
+from pyrankvote.helpers import CandidateStatus, RankingQuota
 
 
 class TestPreferentialBlockVoting(unittest.TestCase):
@@ -335,6 +335,35 @@ class TestSingleTransferableVote(unittest.TestCase):
 
         self.assertEqual(2, len(winners), "Function should return a list with two items")
         self.assertListEqual([per, paal], winners, "Winners should be Per and Pål")
+
+    def test_hare_quota(self):
+        #data taken from https://en.wikipedia.org/wiki/Comparison_of_the_Hare_and_Droop_quotas#Scenario_1
+        Andrea = Candidate("Andrea")
+        Carter = Candidate("Carter")
+        Brad = Candidate("Brad")
+        Delilah = Candidate("Delilah")
+        Scott = Candidate("Scott")
+        Jennifer = Candidate("Jennifer")
+
+        candidates = [Andrea, Carter, Brad, Delilah, Scott, Jennifer]
+
+        ballots = (
+            31*[Ballot(ranked_candidates=[Andrea, Carter, Brad])]
+            + 30*[Ballot(ranked_candidates=[Carter, Andrea, Brad])]
+            + 2*[Ballot(ranked_candidates=[Brad, Andrea, Carter])]
+            + 20*[Ballot(ranked_candidates=[Delilah, Scott, Jennifer])]
+            + 20*[Ballot(ranked_candidates=[Scott, Delilah, Jennifer])]
+            + 17*[Ballot(ranked_candidates=[Jennifer, Delilah, Scott])]
+        )
+
+        election_result = pyrankvote.single_transferable_vote(
+            candidates, ballots, number_of_seats=5, ranking_quota=RankingQuota.Hare
+        )
+        winners = election_result.get_winners()
+
+        self.assertEqual(len(winners), 5, 'There should be 5 winners')
+
+        self.assertEqual(winners, [Andrea, Carter, Delilah, Scott, Jennifer], "Winners should be Andrea, Carter, Delilah, Scott, Jennifer")
 
     def test_example(self):
         popular_moderate = Candidate("William, popular moderate")
