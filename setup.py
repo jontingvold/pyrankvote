@@ -10,15 +10,12 @@ def my_test_suite():
     return test_suite
 
 setuptools.setup(
-    name='pyrankvote',
+    name='votesim',
     version='2.0.2',
-    author='Jon Tingvold',
-    author_email='jon.tingvold@gmail.com',
-    description='PyRankVote is a python library for different ranked voting methods, '
+    description='VoteSim is a python library for different ranked voting methods, '
                 'like instant-runoff voting, single transferable vote and preferential block voting, '
-                'created by Jon Tingvold.',
     license='MIT',
-    url='https://github.com/jontingvold/pyrankvote',
+    url='https://github.com/jss367/votesim',
     
     classifiers=[
         "Programming Language :: Python :: 3",
