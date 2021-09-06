@@ -20,7 +20,7 @@ ballots = [
     Ballot(ranked_candidates=[nader, gore]),
     Ballot(ranked_candidates=[gore, nader, bush]),
     Ballot(ranked_candidates=[gore, nader]),
-    Ballot(ranked_candidates=[gore, nader])
+    Ballot(ranked_candidates=[gore, nader]),
 ]
 
 # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
@@ -35,8 +35,8 @@ print(election_result)
 ROUND 1
 Candidate                      Votes  Status
 ---------------------------  -------  --------
-George W. Bush (Republican)        4  Hopeful
-Al Gore (Democratic)               3  Hopeful
+George W. Bush (Republican)        4  Active
+Al Gore (Democratic)               3  Active
 Ralph Nader (Green)                2  Rejected
 
 FINAL RESULT
@@ -62,10 +62,8 @@ ballots = [
     Ballot(ranked_candidates=[popular_moderate, moderate2, moderate3, far_left]),
     Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
     Ballot(ranked_candidates=[popular_moderate, moderate3, moderate2, far_left]),
-
     Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
     Ballot(ranked_candidates=[moderate2, popular_moderate, moderate3, far_left]),
-
     Ballot(ranked_candidates=[far_left, popular_moderate, moderate2, moderate3]),
     Ballot(ranked_candidates=[far_left, popular_moderate, moderate2, moderate3]),
     Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),

@@ -96,8 +96,8 @@ print(election_result)
 ROUND 1
 Candidate                      Votes  Status
 ---------------------------  -------  --------
-George W. Bush (Republican)        4  Hopeful
-Al Gore (Democratic)               3  Hopeful
+George W. Bush (Republican)        4  Active
+Al Gore (Democratic)               3  Active
 Ralph Nader (Green)                2  Rejected
 
 FINAL RESULT

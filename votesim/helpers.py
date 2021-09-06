@@ -19,7 +19,7 @@ def almost_equal(value1: float, value2: float) -> bool:
 
 class CandidateStatus:
     Elected = "Elected"
-    Hopeful = "Hopeful"
+    Active = "Active"
     Rejected = "Rejected"
 
 
@@ -64,14 +64,14 @@ class RoundResult:
 class CandidateVoteCount:
     def __init__(self, candidate: Candidate):
         self.candidate = candidate
-        self.status = CandidateStatus.Hopeful
+        self.status = CandidateStatus.Active
 
         self.number_of_votes = 0.0
         self.votes: List[Ballot] = []
 
     @property
     def is_in_race(self) -> bool:
-        return self.status == CandidateStatus.Hopeful
+        return self.status == CandidateStatus.Active
 
     def as_candidate_result(self) -> CandidateResult:
         return CandidateResult(self.candidate, self.number_of_votes, self.status)
@@ -200,10 +200,10 @@ class ElectionManager:
             return
 
         candidate_cv = self._candidate_vote_counts[candidate]
-        if candidate_cv.status == CandidateStatus.Hopeful:
+        if candidate_cv.status == CandidateStatus.Active:
             raise RuntimeError(
                 "ElectionManager can not transfer votes from a candidate "
-                "that is still in the race (candidateStatus == Hopeful)"
+                "that is still in the race (candidateStatus == Active)"
             )
 
         voters = len(candidate_cv.votes)  # Voters/ballots, not votes!
@@ -364,7 +364,7 @@ class ElectionResults:
 
      - the ranking of candidates
      - how many votes they got
-     - their election status (elected, hopeful, rejected)
+     - their election status (elected, active, rejected)
 
     ElectionResults.get_winners() makes it trivial to receive the elected candidates.
 
