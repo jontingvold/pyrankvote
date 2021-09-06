@@ -54,7 +54,9 @@ def preferential_block_voting(
 
         seats_left = number_of_seats - manager.get_number_of_elected_candidates()
         candidates_in_race = manager.get_candidates_in_race()
-        candidates_in_race_votes: [float] = [manager.get_number_of_votes(candidate) for candidate in candidates_in_race]
+        candidates_in_race_votes: List[float] = [
+            manager.get_number_of_votes(candidate) for candidate in candidates_in_race
+        ]
 
         votes_remaining = sum(candidates_in_race_votes)
         last_votes = 0.0
@@ -164,7 +166,9 @@ def single_transferable_vote(
     while True:
         seats_left = number_of_seats - manager.get_number_of_elected_candidates()
         candidates_in_race = manager.get_candidates_in_race()
-        candidates_in_race_votes: [float] = [manager.get_number_of_votes(candidate) for candidate in candidates_in_race]
+        candidates_in_race_votes: List[float] = [
+            manager.get_number_of_votes(candidate) for candidate in candidates_in_race
+        ]
 
         votes_remaining = sum(candidates_in_race_votes)
         last_votes = 0.0

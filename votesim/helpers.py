@@ -6,7 +6,7 @@ from votesim.models import Candidate, Ballot
 
 import random
 import functools
-from typing import List, NamedTuple
+from typing import Dict, List, NamedTuple
 from tabulate import tabulate
 
 
@@ -120,7 +120,7 @@ class ElectionManager:
     ):
 
         self._ballots = ballots
-        self._candidate_vote_counts: dict[Candidate:CandidateVoteCount] = {
+        self._candidate_vote_counts: Dict[Candidate:CandidateVoteCount] = {
             candidate: CandidateVoteCount(candidate) for candidate in candidates
         }
 
