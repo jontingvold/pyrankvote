@@ -1,6 +1,6 @@
 import unittest
-import pyrankvote
-from pyrankvote import Candidate, Ballot
+import votesim
+from votesim import Candidate, Ballot
 
 
 class TestInstantRunoffVoting(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden])
         ]
 
-        election_result = pyrankvote.instant_runoff_voting(
+        election_result = votesim.instant_runoff_voting(
             candidates, ballots
         )
         winners = election_result.get_winners()
@@ -39,7 +39,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
             Ballot(ranked_candidates=[hard, stay, soft]),
         ]
 
-        election_result = pyrankvote.instant_runoff_voting(
+        election_result = votesim.instant_runoff_voting(
             candidates, ballots
         )
         winners = election_result.get_winners()
@@ -65,7 +65,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.instant_runoff_voting(
+        election_result = votesim.instant_runoff_voting(
             candidates, ballots
         )
         winners = election_result.get_winners()
@@ -89,7 +89,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
         ]
 
         # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
-        election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+        election_result = votesim.instant_runoff_voting(candidates, ballots)
 
         winners = election_result.get_winners()
 
@@ -112,7 +112,7 @@ class TestInstantRunoffVoting(unittest.TestCase):
         ]
 
         # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
-        election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+        election_result = votesim.instant_runoff_voting(candidates, ballots)
         ranking_first_round = election_result.rounds[0].candidate_results
         blank_votes = election_result.rounds[0].number_of_blank_votes
 

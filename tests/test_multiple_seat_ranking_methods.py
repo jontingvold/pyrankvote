@@ -1,9 +1,9 @@
 import unittest
-from pyrankvote.test_helpers import assert_list_almost_equal
+from votesim.test_helpers import assert_list_almost_equal
 
-import pyrankvote
-from pyrankvote import Candidate, Ballot
-from pyrankvote.helpers import CandidateStatus
+import votesim
+from votesim import Candidate, Ballot
+from votesim.helpers import CandidateStatus
 
 
 class TestPreferentialBlockVoting(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[hard, stay, soft]),
         ]
 
-        election_result = pyrankvote.preferential_block_voting(
+        election_result = votesim.preferential_block_voting(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -49,7 +49,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.preferential_block_voting(
+        election_result = votesim.preferential_block_voting(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -73,7 +73,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.preferential_block_voting(
+        election_result = votesim.preferential_block_voting(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -96,7 +96,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[soft, stay, hard]),
         ]
 
-        election_result = pyrankvote.preferential_block_voting(
+        election_result = votesim.preferential_block_voting(
             candidates, ballots, number_of_seats=1
         )
 
@@ -120,7 +120,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[soft, stay, hard]),
         ]
 
-        election_result = pyrankvote.preferential_block_voting(
+        election_result = votesim.preferential_block_voting(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -151,7 +151,7 @@ class TestPreferentialBlockVoting(unittest.TestCase):
             Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
         ]
 
-        election_result = pyrankvote.preferential_block_voting(candidates, ballots, number_of_seats=2)
+        election_result = votesim.preferential_block_voting(candidates, ballots, number_of_seats=2)
 
         round_nr = 0
         candidates_results_in_round = election_result.rounds[round_nr].candidate_results
@@ -193,7 +193,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[hard, stay, soft]),
         ]
 
-        election_result = pyrankvote.single_transferable_vote(
+        election_result = votesim.single_transferable_vote(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -219,7 +219,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.single_transferable_vote(
+        election_result = votesim.single_transferable_vote(
             candidates, ballots, number_of_seats=1
         )
         winners = election_result.get_winners()
@@ -243,7 +243,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[paal, per, askeladden]),
         ]
 
-        election_result = pyrankvote.single_transferable_vote(
+        election_result = votesim.single_transferable_vote(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -280,7 +280,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         # Final round: Per: 3.33, Pål: 3.67, Ingrid: 2, Maria: 1
         #       --> Paal is elected. Since all seats filled, Ingrid and Maria are rejected.
 
-        election_result = pyrankvote.single_transferable_vote(
+        election_result = votesim.single_transferable_vote(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -328,7 +328,7 @@ class TestSingleTransferableVote(unittest.TestCase):
         # 3. round: Pål: 3.33, Ingrid: 3
         #       --> Pål is elected
 
-        election_result = pyrankvote.single_transferable_vote(
+        election_result = votesim.single_transferable_vote(
             candidates, ballots, number_of_seats=2
         )
         winners = election_result.get_winners()
@@ -358,7 +358,7 @@ class TestSingleTransferableVote(unittest.TestCase):
             Ballot(ranked_candidates=[far_left, moderate2, popular_moderate, moderate3]),
         ]
 
-        election_result = pyrankvote.single_transferable_vote(candidates, ballots, number_of_seats=2)
+        election_result = votesim.single_transferable_vote(candidates, ballots, number_of_seats=2)
 
         round_nr = 0
         candidates_results_in_round = election_result.rounds[round_nr].candidate_results

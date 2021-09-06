@@ -1,10 +1,9 @@
 import unittest
 import os
 import csv
-from operator import itemgetter
-import pyrankvote
-from pyrankvote import Candidate, Ballot
-from pyrankvote.test_helpers import assert_list_almost_equal
+import votesim
+from votesim import Candidate, Ballot
+from votesim.test_helpers import assert_list_almost_equal
 
 
 TEST_FOLDER = "test_data/external_irv/"
@@ -16,8 +15,10 @@ def parse_ballots_csv_file(file_name):
     file_path = os.path.join(TEST_DATA_PATH, file_name)
     with open(file_path) as f:
         csv_file_without_header = list(csv.reader(f))[1:]
-        parsed_csv_file = [(ballot_id, rank, candidate_name) for ballot_id, rank, candidate_name in csv_file_without_header]
-        #sorted_csv_file = sorted(parsed_csv_file, key=itemgetter(0,1))
+        parsed_csv_file = [
+            (ballot_id, rank, candidate_name) for ballot_id, rank, candidate_name in csv_file_without_header
+        ]
+        # sorted_csv_file = sorted(parsed_csv_file, key=itemgetter(0,1))
         sorted_csv_file = parsed_csv_file
 
         candidates = {}
@@ -25,7 +26,7 @@ def parse_ballots_csv_file(file_name):
         last_ballot_id = 0
         ranked_candidates = []
 
-        for ballot_id, rank, candidate_name in sorted_csv_file:
+        for ballot_id, _, candidate_name in sorted_csv_file:
             if ballot_id != last_ballot_id and last_ballot_id != 0:
                 ballot = Ballot(ranked_candidates)
                 ballots.append(ballot)
@@ -61,7 +62,7 @@ class TestExternalIRV(unittest.TestCase):
         file_name = "us_vt_btv_2009_03_mayor.normalized.csv"
         candidates, ballots = parse_ballots_csv_file(file_name)
 
-        election_result = pyrankvote.instant_runoff_voting(candidates, ballots, pick_random_if_blank=False)
+        election_result = votesim.instant_runoff_voting(candidates, ballots, pick_random_if_blank=False)
         last_round = election_result.rounds[-1]
 
         blank_votes = last_round.number_of_blank_votes
@@ -82,7 +83,7 @@ class TestExternalIRV(unittest.TestCase):
         file_name = "us_me_2018_06_cd02-primary.normalized.csv"
         candidates, ballots = parse_ballots_csv_file(file_name)
 
-        election_result = pyrankvote.instant_runoff_voting(candidates, ballots, pick_random_if_blank=False)
+        election_result = votesim.instant_runoff_voting(candidates, ballots, pick_random_if_blank=False)
         last_round = election_result.rounds[-1]
 
         blank_votes = last_round.number_of_blank_votes
@@ -103,7 +104,7 @@ class TestExternalIRV(unittest.TestCase):
         file_name = "us_me_2018_11_cd02.normalized.csv"
         candidates, ballots = parse_ballots_csv_file(file_name)
 
-        election_result = pyrankvote.instant_runoff_voting(candidates, ballots, pick_random_if_blank=False)
+        election_result = votesim.instant_runoff_voting(candidates, ballots, pick_random_if_blank=False)
         last_round = election_result.rounds[-1]
 
         blank_votes = last_round.number_of_blank_votes

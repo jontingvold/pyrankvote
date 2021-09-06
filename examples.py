@@ -1,5 +1,5 @@
-import pyrankvote
-from pyrankvote import Candidate, Ballot
+import votesim
+from votesim import Candidate, Ballot
 
 # ONE SEAT ELECTION: INSTANT RUNOFF VOTING
 
@@ -24,7 +24,7 @@ ballots = [
 ]
 
 # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
-election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+election_result = votesim.instant_runoff_voting(candidates, ballots)
 
 winners = election_result.get_winners()
 # Returns: [<Candidate('Al Gore (Democratic)')>]
@@ -74,7 +74,7 @@ ballots = [
 
 # SINGLE TRANSFERABLE VOTE
 
-election_result = pyrankvote.single_transferable_vote(candidates, ballots, number_of_seats=2)
+election_result = votesim.single_transferable_vote(candidates, ballots, number_of_seats=2)
 # Elects: William, popular moderate; and Thomas, far-left
 
 print(election_result)
@@ -91,7 +91,7 @@ Charles, moderate                0  Rejected
 
 # PREFERENTIAL BLOCK VOTING
 
-election_result = pyrankvote.preferential_block_voting(candidates, ballots, number_of_seats=2)
+election_result = votesim.preferential_block_voting(candidates, ballots, number_of_seats=2)
 # Elects: William, popular moderate; and John, moderate
 
 print(election_result)

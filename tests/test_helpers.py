@@ -1,7 +1,7 @@
 import unittest
-from pyrankvote import Candidate, Ballot
-from pyrankvote import helpers
-from pyrankvote.test_helpers import assert_list_almost_equal
+from votesim import Candidate, Ballot
+from votesim import helpers
+from votesim.test_helpers import assert_list_almost_equal
 
 
 class TestCandidateVoteCount(unittest.TestCase):

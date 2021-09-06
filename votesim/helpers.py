@@ -2,7 +2,7 @@
 Helper classes used by multiple_seat_ranking_methods.py
 
 """
-from pyrankvote.models import Candidate, Ballot
+from votesim.models import Candidate, Ballot
 
 import random
 import functools
@@ -30,7 +30,7 @@ class CandidateResult(NamedTuple):
 
 
 class RoundResult:
-    candidate_results: [CandidateResult]
+    candidate_results: List[CandidateResult]
     number_of_blank_votes: float
 
     def __init__(self, candidate_results, number_of_blank_votes):
@@ -55,9 +55,7 @@ class RoundResult:
             float_format = ".2f"
 
         pretty_print_string = tabulate(
-            results_with_blank_votes,
-            headers=['Candidate', 'Votes', 'Status'],
-            floatfmt=float_format
+            results_with_blank_votes, headers=["Candidate", "Votes", "Status"], floatfmt=float_format
         )
 
         return pretty_print_string
@@ -112,15 +110,17 @@ class ElectionManager:
     the ranking of candidates, so _candidates_in_race should always be properly sorted.
     """
 
-    def __init__(self,
-                 candidates: List[Candidate],
-                 ballots: List[Ballot],
-                 number_of_votes_pr_voter=1,
-                 compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-                 pick_random_if_blank=False):
+    def __init__(
+        self,
+        candidates: List[Candidate],
+        ballots: List[Ballot],
+        number_of_votes_pr_voter=1,
+        compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+        pick_random_if_blank=False,
+    ):
 
         self._ballots = ballots
-        self._candidate_vote_counts: dict[Candidate: CandidateVoteCount] = {
+        self._candidate_vote_counts: dict[Candidate:CandidateVoteCount] = {
             candidate: CandidateVoteCount(candidate) for candidate in candidates
         }
 
@@ -162,7 +162,12 @@ class ElectionManager:
         self._sort_candidates_in_race()
 
     def __repr__(self) -> str:
-        candidate_name_and_votes_str = ", ".join(["%s: %.2f" % (candidate_vc.name, candidate_vc.number_of_votes) for candidate_vc in self.get_candidates_in_race()])
+        candidate_name_and_votes_str = ", ".join(
+            [
+                "%s: %.2f" % (candidate_vc.name, candidate_vc.number_of_votes)
+                for candidate_vc in self.get_candidates_in_race()
+            ]
+        )
         return "<ElectionManager(%s)>" % (candidate_name_and_votes_str)
 
     # METHODS WITH SIDE-EFFECTS
@@ -196,14 +201,18 @@ class ElectionManager:
 
         candidate_cv = self._candidate_vote_counts[candidate]
         if candidate_cv.status == CandidateStatus.Hopeful:
-            raise RuntimeError("ElectionManager can not transfer votes from a candidate "
-                               "that is still in the race (candidateStatus == Hopeful)")
+            raise RuntimeError(
+                "ElectionManager can not transfer votes from a candidate "
+                "that is still in the race (candidateStatus == Hopeful)"
+            )
 
         voters = len(candidate_cv.votes)  # Voters/ballots, not votes!
-        votes_pr_voter = number_of_trans_votes/float(voters)  # This is a fractional number between 0 and 1
+        votes_pr_voter = number_of_trans_votes / float(voters)  # This is a fractional number between 0 and 1
 
         for ballot in candidate_cv.votes:
-            new_candidate_choice = self._get_ballot_candidate_nr_x_in_race_or_none(ballot, self._number_of_votes_pr_voter - 1)
+            new_candidate_choice = self._get_ballot_candidate_nr_x_in_race_or_none(
+                ballot, self._number_of_votes_pr_voter - 1
+            )
             # Is none if blank or exhausted ballot
 
             if new_candidate_choice is None and self._pick_random_if_blank:
@@ -231,7 +240,7 @@ class ElectionManager:
 
     def get_number_of_non_exhausted_votes(self):
         """Returns number of votes excluding blank and exhausted ballots"""
-        return len(self._ballots)*self._number_of_votes_pr_voter - self._number_of_blank_votes
+        return len(self._ballots) * self._number_of_votes_pr_voter - self._number_of_blank_votes
 
     def get_number_of_non_exhausted_ballots(self):
         """Returns number of ballots excluding blank and exhausted ballots"""
@@ -251,11 +260,7 @@ class ElectionManager:
         return self._candidate_vote_counts[candidate].number_of_votes
 
     def get_candidates_in_race(self) -> List[Candidate]:
-        candidates = [
-            candidate_vc.candidate
-            for candidate_vc in self._candidates_in_race
-            if candidate_vc.is_in_race
-        ]
+        candidates = [candidate_vc.candidate for candidate_vc in self._candidates_in_race if candidate_vc.is_in_race]
         return candidates
 
     def get_candidate_with_least_votes_in_race(self) -> Candidate:
@@ -287,9 +292,7 @@ class ElectionManager:
     # INTERNAL METHODS
     def _get_ballot_candidate_nr_x_in_race_or_none(self, ballot: Ballot, x: int) -> Candidate:
         ranked_candidates_in_race = [
-            candidate
-            for candidate in ballot.ranked_candidates
-            if self._candidate_vote_counts[candidate].is_in_race
+            candidate for candidate in ballot.ranked_candidates if self._candidate_vote_counts[candidate].is_in_race
         ]
 
         if len(ranked_candidates_in_race) > x:
@@ -299,8 +302,9 @@ class ElectionManager:
             return None
 
     def _sort_candidates_in_race(self):
-        sorted_candidates_in_race = sorted(self._candidates_in_race,
-                                           key=functools.cmp_to_key(self._cmp_candidate_vote_counts))
+        sorted_candidates_in_race = sorted(
+            self._candidates_in_race, key=functools.cmp_to_key(self._cmp_candidate_vote_counts)
+        )
         self._candidates_in_race = sorted_candidates_in_race
 
     def _cmp_candidate_vote_counts(self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount) -> int:
@@ -329,8 +333,9 @@ class ElectionManager:
             else:
                 raise SystemError("Compare method unknown/not implemented.")
 
-    def _candidate1_has_most_second_choices(self, candidate1_vc: CandidateVoteCount,
-                                            candidate2_vc: CandidateVoteCount, x: int) -> bool:
+    def _candidate1_has_most_second_choices(
+        self, candidate1_vc: CandidateVoteCount, candidate2_vc: CandidateVoteCount, x: int
+    ) -> bool:
         if x >= self._number_of_candidates:
             return random.choice([True, False])
 
@@ -365,7 +370,7 @@ class ElectionResults:
 
     ElectedResults can be printed:
 
-    > elected_results = pyrankvote.single_transferable_vote(candidates, ballots)
+    > elected_results = votesim.single_transferable_vote(candidates, ballots)
     > print(elected_results)
     """
 
@@ -392,7 +397,7 @@ class ElectionResults:
         for i, round_ in enumerate(self.rounds):
 
             # Print round nr header
-            if i == len(self.rounds)-1:
+            if i == len(self.rounds) - 1:
                 lines.append("FINAL RESULT")
             else:
                 round_nr = i + 1

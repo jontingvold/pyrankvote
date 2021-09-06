@@ -1,10 +1,10 @@
 
 
-PyRankVote —A Ranked Choice Voting System for Python
+votesim —A Ranked Choice Voting System for Python
 ==========
-[![PyPI version](https://badge.fury.io/py/pyrankvote.svg)](https://badge.fury.io/py/pyrankvote) ![Test status](https://github.com/jontingvold/pyrankvote/workflows/CI/badge.svg?branch=master)  [![Coverage Status](https://coveralls.io/repos/github/jontingvold/pyrankvote/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/pyrankvote?branch=master)
+[![PyPI version](https://badge.fury.io/py/votesim.svg)](https://badge.fury.io/py/votesim) ![Test status](https://github.com/jontingvold/votesim/workflows/CI/badge.svg?branch=master)  [![Coverage Status](https://coveralls.io/repos/github/jontingvold/votesim/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/votesim?branch=master)
 
-PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
+votesim is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
 
 The following ranking methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
 
@@ -46,7 +46,7 @@ Instant-runoff voting and Preferential block voting are basically the same as **
 
 For more info:
 
-- [pyrankvote/single_seat_ranking_methods.py](pyrankvote/single_seat_ranking_methods.py) and  [pyrankvote/multiple_seat_ranking_methods.py](pyrankvote/multiple_seat_ranking_methods.py)
+- [votesim/single_seat_ranking_methods.py](votesim/single_seat_ranking_methods.py) and  [votesim/multiple_seat_ranking_methods.py](votesim/multiple_seat_ranking_methods.py)
 - Wikipedia: [IRV](https://en.wikipedia.org/wiki/Instant-runoff_voting), [STV](https://en.wikipedia.org/wiki/Single_transferable_vote), [PBV](https://en.wikipedia.org/wiki/Preferential_block_voting), [exhaustive ballot](https://en.wikipedia.org/wiki/Exhaustive_ballot)
 - CGP Gray's YouTube videos: [IRV](https://www.youtube.com/watch?v=3Y3jE3B8HsE), [STV1](https://www.youtube.com/watch?v=l8XOZJkozfI&t=2s), [STV2](https://www.youtube.com/watch?v=Ac9070OIMUg), [STV3](https://www.youtube.com/watch?v=wRc630BSTIg)
 
@@ -55,14 +55,14 @@ For more info:
 With pip package manager:
 
 ```bash
-pip install pyrankvote
+pip install votesim
 ```
 
 ## Usage
 
 ```python
-import pyrankvote
-from pyrankvote import Candidate, Ballot
+import votesim
+from votesim import Candidate, Ballot
 
 bush = Candidate("George W. Bush (Republican)")
 gore = Candidate("Al Gore (Democratic)")
@@ -85,7 +85,7 @@ ballots = [
 ]
 
 # You can use your own Candidate and Ballot objects as long as they implement the same properties and methods
-election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+election_result = votesim.instant_runoff_voting(candidates, ballots)
 
 winners = election_result.get_winners()
 # Returns: [<Candidate('Al Gore (Democratic)')>]
@@ -114,7 +114,7 @@ More examples in [examples.py](./examples.py)
 ## Versions
 
 - v2.0 (2020-04-08): **Compact round results and standard STV-procedure** 
-    - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `pyrankvote.single_transferable_vote(candidates, ballots, pick_random_if_blank=True)`
+    - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `votesim.single_transferable_vote(candidates, ballots, pick_random_if_blank=True)`
 - v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use. 
 - v0.0 (2019-08-09): **Pre-release**
 
