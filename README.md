@@ -4,7 +4,7 @@ votesim —A Ranked Choice Voting System for Python
 ==========
 [![PyPI version](https://badge.fury.io/py/votesim.svg)](https://badge.fury.io/py/votesim) ![Test status](https://github.com/jontingvold/votesim/workflows/CI/badge.svg?branch=master)  [![Coverage Status](https://coveralls.io/repos/github/jontingvold/votesim/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/votesim?branch=master)
 
-votesim is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
+votesim is a python library for election voting. It was forked from [PyRankVote](https://github.com/jontingvold/pyrankvote).
 
 The following ranking methods are implemented for electing one person/alternative (e.g. electing the chairman to a board):
 
