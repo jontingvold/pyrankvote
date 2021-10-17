@@ -111,12 +111,5 @@ Ralph Nader (Green)                0  Rejected
 
 More examples in [examples.py](./examples.py)
 
-## Versions
-
-- v2.0 (2020-04-08): **Compact round results and standard STV-procedure** 
-    - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `votesim.single_transferable_vote(candidates, ballots, pick_random_if_blank=True)`
-- v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use. 
-- v0.0 (2019-08-09): **Pre-release**
-
 ## License
 [MIT](LICENSE.txt)
