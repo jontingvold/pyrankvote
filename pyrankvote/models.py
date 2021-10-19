@@ -55,7 +55,7 @@ class Ballot:
 
     @staticmethod
     def _is_duplicates(ranked_candidates) -> bool:
-        return len(set(ranked_candidates)) is not len(ranked_candidates)
+        return len(set(ranked_candidates)) != len(ranked_candidates)
 
     @staticmethod
     def _is_all_candidate_objects(objects) -> bool:
