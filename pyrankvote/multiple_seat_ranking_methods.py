@@ -110,12 +110,11 @@ def preferential_block_voting(
         else:
             # For voters who voted on rejected candidates,
             # transfer votes to 2nd choice (or 3rd, 4th etc.)
+            transfers = {}
             for candidate in candidates_to_reject:
                 number_of_votes = manager.get_number_of_votes(candidate)
-                manager.transfer_votes(candidate, number_of_votes)
-
-            # New round
-            continue
+                transfers[candidate] = manager.transfer_votes(candidate, number_of_votes)
+            election_results.rounds[-1].transfers = transfers
 
     return election_results
 
@@ -223,20 +222,20 @@ def single_transferable_vote(
             break
 
         else:
+            transfers = {}
+            
             # For voters who votes for elected candidates,
             # transfer excess votes to 2nd choice (or 3rd, 4th etc.)
             for candidate in candidates_to_elect:
                 votes_for_candidate = manager.get_number_of_votes(candidate)
                 excess_votes: float = votes_for_candidate - votes_needed_to_win
-                manager.transfer_votes(candidate, excess_votes)
+                transfers[candidate] = manager.transfer_votes(candidate, excess_votes)
 
             # For votes who votes on rejected candidates,
             # transfer all votes to 2nd choice (or 3rd, 4th etc.)
             for candidate in candidates_to_reject:
                 votes_for_candidate = manager.get_number_of_votes(candidate)
-                manager.transfer_votes(candidate, votes_for_candidate)
-
-            # New round
-            continue
+                transfers[candidate] = manager.transfer_votes(candidate, votes_for_candidate)
+            election_results.rounds[-1].transfers = transfers
 
     return election_results

@@ -6,12 +6,13 @@ from pyrankvote.models import Candidate, Ballot
 
 import random
 import functools
+from collections import defaultdict
 from typing import List, NamedTuple
 from tabulate import tabulate
 
 
 CONSIDERED_EQUAL_MARGIN = 0.001
-
+BLANK_CANDIDATE = None
 
 def almost_equal(value1: float, value2: float) -> bool:
     return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
@@ -32,10 +33,12 @@ class CandidateResult(NamedTuple):
 class RoundResult:
     candidate_results: [CandidateResult]
     number_of_blank_votes: float
+    transfers: dict
 
     def __init__(self, candidate_results, number_of_blank_votes):
         self.candidate_results = candidate_results
         self.number_of_blank_votes = number_of_blank_votes
+        self.transfers = {}
 
     def __repr__(self):
         representation_string = "<RoundResult>"
@@ -192,7 +195,7 @@ class ElectionManager:
             raise RuntimeError("Candidate not found in electionManager")
         if round(number_of_trans_votes, 4) == 0.000:
             # Do nothing
-            return
+            return {}
 
         candidate_cv = self._candidate_vote_counts[candidate]
         if candidate_cv.status == CandidateStatus.Hopeful:
@@ -201,6 +204,8 @@ class ElectionManager:
 
         voters = len(candidate_cv.votes)  # Voters/ballots, not votes!
         votes_pr_voter = number_of_trans_votes/float(voters)  # This is a fractional number between 0 and 1
+
+        transfers = defaultdict(int)
 
         for ballot in candidate_cv.votes:
             new_candidate_choice = self._get_ballot_candidate_nr_x_in_race_or_none(ballot, self._number_of_votes_pr_voter - 1)
@@ -216,16 +221,18 @@ class ElectionManager:
                 new_candidate_cv = self._candidate_vote_counts[new_candidate_choice]
                 new_candidate_cv.number_of_votes += votes_pr_voter
                 new_candidate_cv.votes.append(ballot)
-
+                transfers[new_candidate_choice] += votes_pr_voter
             # Still "Blank ballot"
             else:
                 self._exhausted_ballots.append(ballot)
                 self._number_of_blank_votes += votes_pr_voter
+                transfers[BLANK_CANDIDATE] += votes_pr_voter
 
         candidate_cv.number_of_votes -= number_of_trans_votes
         candidate_cv.votes = []
 
         self._sort_candidates_in_race()
+        return transfers
 
     # METHODS WITHOUT SIDE-EFFECTS
 
