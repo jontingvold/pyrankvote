@@ -120,7 +120,7 @@ More examples in [examples.py](https://github.com/jontingvold/pyrankvote/blob/ma
 
 ## Popularity
 
-From 2019-09-15 to 2020-05-01 the library was downloaded around 400 times from PyPi (pip). That figure does not include downloads that look like they are coming from bots/mirrors/grab scripts.
+Currently (summer 2022) the library is downloaded round 300 times per month from PyPi (pip). That figure does not include downloads that look like they are coming from bots/mirrors/grab scripts.
 
 ## Contributing
 
