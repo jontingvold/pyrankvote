@@ -46,7 +46,7 @@ Instant-runoff voting and Preferential block voting are basically the same as **
 
 For more info:
 
-- [pyrankvote/single_seat_ranking_methods.py](pyrankvote/single_seat_ranking_methods.py) and  [pyrankvote/multiple_seat_ranking_methods.py](pyrankvote/multiple_seat_ranking_methods.py)
+- [pyrankvote/single_seat_ranking_methods.py](https://github.com/jontingvold/pyrankvote/blob/master/pyrankvote/single_seat_ranking_methods.py) and  [pyrankvote/multiple_seat_ranking_methods.py](https://github.com/jontingvold/pyrankvote/blob/master/pyrankvote/multiple_seat_ranking_methods.py)
 - Wikipedia: [IRV](https://en.wikipedia.org/wiki/Instant-runoff_voting), [STV](https://en.wikipedia.org/wiki/Single_transferable_vote), [PBV](https://en.wikipedia.org/wiki/Preferential_block_voting), [exhaustive ballot](https://en.wikipedia.org/wiki/Exhaustive_ballot)
 - CGP Gray's YouTube videos: [IRV](https://www.youtube.com/watch?v=3Y3jE3B8HsE), [STV1](https://www.youtube.com/watch?v=l8XOZJkozfI&t=2s), [STV2](https://www.youtube.com/watch?v=Ac9070OIMUg), [STV3](https://www.youtube.com/watch?v=wRc630BSTIg)
 
@@ -109,7 +109,7 @@ Ralph Nader (Green)                0  Rejected
 """
 ```
 
-More examples in [examples.py](./examples.py)
+More examples in [examples.py](https://github.com/jontingvold/pyrankvote/blob/master/examples.py)
 
 ## Versions
 
