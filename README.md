@@ -133,4 +133,4 @@ Please make sure to update tests as appropriate.
 Feel free to [send me an email](http://www.jontingvold.no/) if you have questions about the project.
 
 ## License
-[MIT](LICENSE.txt)
+[MIT](https://github.com/jontingvold/pyrankvote/blob/master/LICENSE.txt)
