@@ -86,6 +86,12 @@ class CompareMethodIfEqual:
     Random = "Random"
     MostSecondChoiceVotes = "MostSecondChoiceVotes"
 
+class RankingQuota:
+    def Droop(voters, seats):
+        return voters / (seats+1)
+
+    def Hare(voters, seats):
+        return voters / seats
 
 class NoCandidatesLeftInRaceError(RuntimeError):
     pass

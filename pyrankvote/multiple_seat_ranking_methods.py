@@ -7,7 +7,7 @@ Implemented methods:
 """
 
 from typing import List
-from pyrankvote.helpers import CompareMethodIfEqual, ElectionManager, ElectionResults
+from pyrankvote.helpers import CompareMethodIfEqual, ElectionManager, ElectionResults, RankingQuota
 from pyrankvote.models import Candidate, Ballot
 import math
 
@@ -125,7 +125,8 @@ def single_transferable_vote(
         ballots: List[Ballot],
         number_of_seats: int,
         compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-        pick_random_if_blank=False
+        pick_random_if_blank=False,
+        ranking_quota=RankingQuota.Droop
     ) -> ElectionResults:
     """
     Single transferable vote (STV) is a multiple candidate election method, that elected the candidate that can
@@ -134,9 +135,7 @@ def single_transferable_vote(
     If only one candidate can be elected, this method is the same as Instant runoff voting.
 
     Voters rank candidates and are granted as one vote each. If a candidate gets more votes than the threshold for being
-    elected, the candidate is proclaimed as winner. This function uses the Droop quota, where
-
-        droop_quota = votes/(seats+1)
+    elected, the candidate is proclaimed as winner.
 
     If one candidate get more votes than the threshold the excess votes are transfered to voters that voted for this
     candidate's 2nd (or 3rd, 4th etc) alternative. If no candidate get over the threshold, the candidate with fewest votes
@@ -157,7 +156,7 @@ def single_transferable_vote(
     election_results = ElectionResults()
 
     voters, seats = manager.get_number_of_non_exhausted_ballots(), number_of_seats
-    votes_needed_to_win: float = voters / float((seats + 1))  # Drop quota
+    votes_needed_to_win = ranking_quota(voters, seats)
 
     # Remove worst candidate until same number of candidates left as electable
     # While it is more candidates left than electable
@@ -175,7 +174,7 @@ def single_transferable_vote(
             votes_for_candidate = candidates_in_race_votes[i]
             is_last_candidate = i == len(candidates_in_race) - 1
 
-            # Elect candidates with more votes than Drop quota
+            # Elect candidates with more votes than the quota
             if (votes_for_candidate - rounding_error) >= votes_needed_to_win:
                 candidates_to_elect.append(candidate)
 
