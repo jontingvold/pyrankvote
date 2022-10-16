@@ -54,7 +54,7 @@ def preferential_block_voting(
 
         seats_left = number_of_seats - manager.get_number_of_elected_candidates()
         candidates_in_race = manager.get_candidates_in_race()
-        candidates_in_race_votes: [float] = [
+        candidates_in_race_votes: List[float] = [
             manager.get_number_of_votes(candidate) for candidate in candidates_in_race
         ]
 
@@ -76,7 +76,7 @@ def preferential_block_voting(
                 candidates_to_reject.append(candidate)
 
             elif is_last_candidate:
-                # Should be catched by if statement above
+                # Should be caught by if statement above
                 raise RuntimeError("Illigal state")
 
             last_votes = votes_for_candidate
@@ -166,7 +166,7 @@ def single_transferable_vote(
     while True:
         seats_left = number_of_seats - manager.get_number_of_elected_candidates()
         candidates_in_race = manager.get_candidates_in_race()
-        candidates_in_race_votes: [float] = [
+        candidates_in_race_votes: List[float] = [
             manager.get_number_of_votes(candidate) for candidate in candidates_in_race
         ]
 
@@ -193,8 +193,8 @@ def single_transferable_vote(
                     candidates_to_reject.append(candidate)
 
             elif is_last_candidate:
-                # Should be catched by if statement above
-                raise RuntimeError("Illigal state")
+                # Should be caught by if statement above
+                raise RuntimeError("Illegal state")
 
             last_votes = votes_for_candidate
             votes_remaining -= votes_for_candidate

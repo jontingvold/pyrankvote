@@ -30,11 +30,11 @@ class CandidateResult(NamedTuple):
 
 
 class RoundResult:
-    candidate_results: list[CandidateResult]
+    candidate_results: List[CandidateResult]
     number_of_blank_votes: float
 
     def __init__(
-        self, candidate_results: list[CandidateResult], number_of_blank_votes: float
+        self, candidate_results: List[CandidateResult], number_of_blank_votes: float
     ):
         self.candidate_results = candidate_results
         self.number_of_blank_votes = number_of_blank_votes
