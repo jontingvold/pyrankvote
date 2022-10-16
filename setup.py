@@ -14,7 +14,7 @@ def my_test_suite():
 
 setuptools.setup(
     name="pyrankvote",
-    version="2.0.5",
+    version="2.0.6",
     author="Jon Tingvold",
     author_email="jon.tingvold@gmail.com",
     description="PyRankVote is a python library for different ranked voting methods, "

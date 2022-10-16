@@ -111,6 +111,7 @@ More examples in [examples.py](https://github.com/jontingvold/pyrankvote/blob/ma
 
 ## Versions
 
+- v2.0.6 (2022-10-15) Fix compatibility with new tabular version under Python 3.10
 - v2.0 (2020-04-08): **Compact round results and standard STV-procedure**
   - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `pyrankvote.single_transferable_vote(candidates, ballots, pick_random_if_blank=True)`
 - v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use.

@@ -43,18 +43,25 @@ class RoundResult:
         representation_string = "<RoundResult>"
         return representation_string
 
-        if almost_equal(self.number_of_blank_votes, 0.0):
-            results_with_blank_votes = self.candidate_results
-        else:
-            blank_votes_as_candidate_results = [("Blank votes", self.number_of_blank_votes, CandidateStatus.Rejected)]
-            results_with_blank_votes = self.candidate_results + blank_votes_as_candidate_results
     def __str__(self) -> str:
+        results_with_blank_votes = [
+            (str(candidate), number_of_votes, status)
+            for candidate, number_of_votes, status in self.candidate_results
+        ]
 
-        all_integers = all([float(candidateResult[1]).is_integer() for candidateResult in results_with_blank_votes])
-        if all_integers:
-            float_format = ".0f"
-        else:
-            float_format = ".2f"
+        if not almost_equal(self.number_of_blank_votes, 0.0):
+            results_with_blank_votes.append(
+                ("Blank Votes", self.number_of_blank_votes, CandidateStatus.Rejected)
+            )
+
+        all_integers = all(
+            [
+                float(candidateResult[1]).is_integer()
+                for candidateResult in results_with_blank_votes
+            ]
+        )
+
+        float_format = ".0f" if all_integers else ".2f"
 
         pretty_print_string = tabulate(
             results_with_blank_votes,
