@@ -1,8 +1,6 @@
+# PyRankVote —A Ranked Choice Voting System for Python
 
-
-PyRankVote —A Ranked Choice Voting System for Python
-==========
-[![PyPI version](https://badge.fury.io/py/pyrankvote.svg)](https://badge.fury.io/py/pyrankvote) ![Test status](https://github.com/jontingvold/pyrankvote/workflows/CI/badge.svg?branch=master)  [![Coverage Status](https://coveralls.io/repos/github/jontingvold/pyrankvote/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/pyrankvote?branch=master)
+[![PyPI version](https://badge.fury.io/py/pyrankvote.svg)](https://badge.fury.io/py/pyrankvote) ![Test status](https://github.com/jontingvold/pyrankvote/workflows/CI/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/jontingvold/pyrankvote/badge.svg?branch=master)](https://coveralls.io/github/jontingvold/pyrankvote?branch=master)
 
 PyRankVote is a python library for different ranked-choice voting systems (sometimes called preferential voting systems) created by Jon Tingvold in June 2019.
 
@@ -27,7 +25,7 @@ can obtain majority support (more than 50%). PBV tends to elect uncontroversial 
 Voters rank candidates and are granted as many votes as there are people that should be elected. The candidate with
 fewest votes are removed and this candidate's votes are transferred according to the voters 2nd preference (or 3rd etc).
 
-**Single transferable vote (STV)** is a multiple candidate election method that elects candidates based on proportional representation. Minority (and extreme) groups get representation if they have enough votes to elect a candidate. STV is therefore the preferred ranked-choice voting method for parliament elections and most multiple seat elections, but it's more complex than  PBV, so it explained last.
+**Single transferable vote (STV)** is a multiple candidate election method that elects candidates based on proportional representation. Minority (and extreme) groups get representation if they have enough votes to elect a candidate. STV is therefore the preferred ranked-choice voting method for parliament elections and most multiple seat elections, but it's more complex than PBV, so it explained last.
 
 Voters rank candidates and are granted as one vote each. If a candidate gets more votes than the threshold for being
 elected, the candidate is proclaimed as winner. This function uses the Droop quota, where
@@ -46,7 +44,7 @@ Instant-runoff voting and Preferential block voting are basically the same as **
 
 For more info:
 
-- [pyrankvote/single_seat_ranking_methods.py](https://github.com/jontingvold/pyrankvote/blob/master/pyrankvote/single_seat_ranking_methods.py) and  [pyrankvote/multiple_seat_ranking_methods.py](https://github.com/jontingvold/pyrankvote/blob/master/pyrankvote/multiple_seat_ranking_methods.py)
+- [pyrankvote/single_seat_ranking_methods.py](https://github.com/jontingvold/pyrankvote/blob/master/pyrankvote/single_seat_ranking_methods.py) and [pyrankvote/multiple_seat_ranking_methods.py](https://github.com/jontingvold/pyrankvote/blob/master/pyrankvote/multiple_seat_ranking_methods.py)
 - Wikipedia: [IRV](https://en.wikipedia.org/wiki/Instant-runoff_voting), [STV](https://en.wikipedia.org/wiki/Single_transferable_vote), [PBV](https://en.wikipedia.org/wiki/Preferential_block_voting), [exhaustive ballot](https://en.wikipedia.org/wiki/Exhaustive_ballot)
 - CGP Gray's YouTube videos: [IRV](https://www.youtube.com/watch?v=3Y3jE3B8HsE), [STV1](https://www.youtube.com/watch?v=l8XOZJkozfI&t=2s), [STV2](https://www.youtube.com/watch?v=Ac9070OIMUg), [STV3](https://www.youtube.com/watch?v=wRc630BSTIg)
 
@@ -113,9 +111,9 @@ More examples in [examples.py](https://github.com/jontingvold/pyrankvote/blob/ma
 
 ## Versions
 
-- v2.0 (2020-04-08): **Compact round results and standard STV-procedure** 
-    - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `pyrankvote.single_transferable_vote(candidates, ballots, pick_random_if_blank=True)`
-- v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use. 
+- v2.0 (2020-04-08): **Compact round results and standard STV-procedure**
+  - Non-backward compatible change: If ballot exhausted, the ballot is now thrown away instead of picking a candidate at random. This is more in line with most RCV-systems. The old practice can be reenabled with `pyrankvote.single_transferable_vote(candidates, ballots, pick_random_if_blank=True)`
+- v1.0 (2019-09-15): **Stable release.** First release I assume is stable enough to encourage use.
 - v0.0 (2019-08-09): **Pre-release**
 
 ## Popularity
@@ -133,4 +131,5 @@ Please make sure to update tests as appropriate.
 Feel free to [send me an email](http://www.jontingvold.no/) if you have questions about the project.
 
 ## License
+
 [MIT](https://github.com/jontingvold/pyrankvote/blob/master/LICENSE.txt)

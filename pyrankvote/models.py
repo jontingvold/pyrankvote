@@ -46,11 +46,15 @@ class Ballot:
             raise DuplicateCandidatesError
 
         if not Ballot._is_all_candidate_objects(ranked_candidates):
-            raise TypeError("Not all objects in ranked candidate list are of class Candidate or "
-                            "implement the same properties and methods")
+            raise TypeError(
+                "Not all objects in ranked candidate list are of class Candidate or "
+                "implement the same properties and methods"
+            )
 
     def __repr__(self) -> str:
-        candidate_name = ", ".join([candidate.name for candidate in self.ranked_candidates])
+        candidate_name = ", ".join(
+            [candidate.name for candidate in self.ranked_candidates]
+        )
         return "<Ballot(%s)>" % candidate_name
 
     @staticmethod
@@ -71,10 +75,8 @@ class Ballot:
         if obj.__class__ is Candidate:
             return True
 
-        is_candidate_like = all([
-            hasattr(obj, 'name'),
-            hasattr(obj, '__hash__'),
-            hasattr(obj, '__eq__')
-        ])
+        is_candidate_like = all(
+            [hasattr(obj, "name"), hasattr(obj, "__hash__"), hasattr(obj, "__eq__")]
+        )
 
         return is_candidate_like

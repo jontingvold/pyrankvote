@@ -13,12 +13,12 @@ import math
 
 
 def preferential_block_voting(
-        candidates: List[Candidate],
-        ballots: List[Ballot],
-        number_of_seats: int,
-        compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-        pick_random_if_blank=False
-    ) -> ElectionResults:
+    candidates: List[Candidate],
+    ballots: List[Ballot],
+    number_of_seats: int,
+    compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+    pick_random_if_blank=False,
+) -> ElectionResults:
     """
     Preferential block voting (PBV) is a multiple candidate election method, that elected the candidate that can
     draw majority support (more than 50%). Minority groups therefore lose their representation.
@@ -43,7 +43,7 @@ def preferential_block_voting(
         ballots,
         number_of_votes_pr_voter=number_of_seats,
         compare_method_if_equal=compare_method_if_equal,
-        pick_random_if_blank=pick_random_if_blank
+        pick_random_if_blank=pick_random_if_blank,
     )
     election_results = ElectionResults()
 
@@ -54,7 +54,9 @@ def preferential_block_voting(
 
         seats_left = number_of_seats - manager.get_number_of_elected_candidates()
         candidates_in_race = manager.get_candidates_in_race()
-        candidates_in_race_votes: [float] = [manager.get_number_of_votes(candidate) for candidate in candidates_in_race]
+        candidates_in_race_votes: [float] = [
+            manager.get_number_of_votes(candidate) for candidate in candidates_in_race
+        ]
 
         votes_remaining = sum(candidates_in_race_votes)
         last_votes = 0.0
@@ -121,12 +123,12 @@ def preferential_block_voting(
 
 
 def single_transferable_vote(
-        candidates: List[Candidate],
-        ballots: List[Ballot],
-        number_of_seats: int,
-        compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
-        pick_random_if_blank=False
-    ) -> ElectionResults:
+    candidates: List[Candidate],
+    ballots: List[Ballot],
+    number_of_seats: int,
+    compare_method_if_equal=CompareMethodIfEqual.MostSecondChoiceVotes,
+    pick_random_if_blank=False,
+) -> ElectionResults:
     """
     Single transferable vote (STV) is a multiple candidate election method, that elected the candidate that can
     based on proportional representation. Minority groups therefore get representation.
@@ -152,7 +154,7 @@ def single_transferable_vote(
         ballots,
         number_of_votes_pr_voter=1,
         compare_method_if_equal=compare_method_if_equal,
-        pick_random_if_blank=pick_random_if_blank
+        pick_random_if_blank=pick_random_if_blank,
     )
     election_results = ElectionResults()
 
@@ -164,7 +166,9 @@ def single_transferable_vote(
     while True:
         seats_left = number_of_seats - manager.get_number_of_elected_candidates()
         candidates_in_race = manager.get_candidates_in_race()
-        candidates_in_race_votes: [float] = [manager.get_number_of_votes(candidate) for candidate in candidates_in_race]
+        candidates_in_race_votes: [float] = [
+            manager.get_number_of_votes(candidate) for candidate in candidates_in_race
+        ]
 
         votes_remaining = sum(candidates_in_race_votes)
         last_votes = 0.0
