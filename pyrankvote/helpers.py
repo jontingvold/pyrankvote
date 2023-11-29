@@ -7,7 +7,7 @@ from pyrankvote.models import Candidate, Ballot
 from enum import Enum
 import random
 import functools
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Optional
 from tabulate import tabulate
 
 
@@ -332,7 +332,7 @@ class ElectionManager:
     # INTERNAL METHODS
     def _get_ballot_candidate_nr_x_in_race_or_none(
         self, ballot: Ballot, x: int
-    ) -> Candidate:
+    ) -> Optional[Candidate]:
         ranked_candidates_in_race = [
             candidate
             for candidate in ballot.ranked_candidates
