@@ -4,9 +4,10 @@ Helper classes used by multiple_seat_ranking_methods.py
 """
 from pyrankvote.models import Candidate, Ballot
 
+from enum import Enum
 import random
 import functools
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Optional
 from tabulate import tabulate
 
 
@@ -17,7 +18,7 @@ def almost_equal(value1: float, value2: float) -> bool:
     return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
 
 
-class CandidateStatus:
+class CandidateStatus(Enum):
     Elected = "Elected"
     Hopeful = "Hopeful"
     Rejected = "Rejected"
@@ -134,7 +135,7 @@ class ElectionManager:
     ):
 
         self._ballots = ballots
-        self._candidate_vote_counts: dict[Candidate:CandidateVoteCount] = {
+        self._candidate_vote_counts: dict[Candidate, CandidateVoteCount] = {
             candidate: CandidateVoteCount(candidate) for candidate in candidates
         }
 
@@ -331,7 +332,7 @@ class ElectionManager:
     # INTERNAL METHODS
     def _get_ballot_candidate_nr_x_in_race_or_none(
         self, ballot: Ballot, x: int
-    ) -> Candidate:
+    ) -> Optional[Candidate]:
         ranked_candidates_in_race = [
             candidate
             for candidate in ballot.ranked_candidates

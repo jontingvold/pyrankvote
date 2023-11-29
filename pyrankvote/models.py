@@ -3,7 +3,7 @@ Models that are used by multiple_seat_ranking_methods.py
 
 You can create and use your own Candidate and Ballot models as long as they implement the same properties and methods.
 """
-from typing import List
+from typing import List, Tuple
 
 
 class Candidate:
@@ -40,7 +40,7 @@ class Ballot:
     """
 
     def __init__(self, ranked_candidates: List[Candidate]):
-        self.ranked_candidates: List[Candidate] = tuple(ranked_candidates)
+        self.ranked_candidates: Tuple[Candidate, ...] = tuple(ranked_candidates)
 
         if Ballot._is_duplicates(ranked_candidates):
             raise DuplicateCandidatesError
