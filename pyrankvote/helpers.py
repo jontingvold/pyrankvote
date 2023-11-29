@@ -135,7 +135,7 @@ class ElectionManager:
     ):
 
         self._ballots = ballots
-        self._candidate_vote_counts: dict[Candidate:CandidateVoteCount] = {
+        self._candidate_vote_counts: dict[Candidate, CandidateVoteCount] = {
             candidate: CandidateVoteCount(candidate) for candidate in candidates
         }
 
