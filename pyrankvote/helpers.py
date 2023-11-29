@@ -4,6 +4,7 @@ Helper classes used by multiple_seat_ranking_methods.py
 """
 from pyrankvote.models import Candidate, Ballot
 
+from enum import Enum
 import random
 import functools
 from typing import List, NamedTuple
@@ -17,7 +18,7 @@ def almost_equal(value1: float, value2: float) -> bool:
     return abs(value1 - value2) < CONSIDERED_EQUAL_MARGIN
 
 
-class CandidateStatus:
+class CandidateStatus(Enum):
     Elected = "Elected"
     Hopeful = "Hopeful"
     Rejected = "Rejected"
