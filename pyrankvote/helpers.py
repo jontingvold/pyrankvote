@@ -192,8 +192,9 @@ class ElectionManager:
     def __repr__(self) -> str:
         candidate_name_and_votes_str = ", ".join(
             [
-                "%s: %.2f" % (candidate_vc.name, candidate_vc.number_of_votes)
-                for candidate_vc in self.get_candidates_in_race()
+                "%s: %.2f" % (candidate_vc.candidate.name, candidate_vc.number_of_votes)
+                for candidate_vc in self._candidates_in_race
+                if candidate_vc.is_in_race
             ]
         )
         return "<ElectionManager(%s)>" % (candidate_name_and_votes_str)
